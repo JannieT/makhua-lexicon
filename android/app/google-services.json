@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "37144391818",
+    "project_id": "makhua-lexicon",
+    "storage_bucket": "makhua-lexicon.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37144391818:android:33f45f7574353a5a8f3d73",
+        "android_client_info": {
+          "package_name": "net.kiekies.makhua_lexicon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeEsGCozj99rPWYe4uRu2e0QWxi4pX6Ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
