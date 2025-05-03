@@ -1,6 +1,15 @@
 {
-  "appTitle": "App title goes here",
+  "appTitle": "Makhua Shirima Lexicon",
   "@appTitle": {
     "description": "The title of the application"
-  }
+  },
+  "loginTitle": "Makhua Shirima Lexicon",
+  "loginLabel": "Sign In",
+  "email": "Email",
+  "password": "Password",
+  "emailRequired": "Email cannot be empty",
+  "passwordRequired": "Password cannot be empty",
+  "userDoesntExistsWithGivenEmail": "No user with this email",
+  "invalidEmailOrPassword": "Invalid email or password",
+  "somethingWentWrongPleaseTryAgain": "Something went wrong, please try again"
 }

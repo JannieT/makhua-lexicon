@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../settings/settings_screen.dart';
 
 /// Placeholder for home screen
-class RootScreen extends StatelessWidget {
-  const RootScreen({super.key});
+class LookupScreen extends StatelessWidget {
+  const LookupScreen({super.key});
 
   static const routeName = '/';
 

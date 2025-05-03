@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,9 +7,9 @@ const designHeight = 812;
 
 extension ExtendBuildContext on BuildContext {
   AppLocalizations get tr => AppLocalizations.of(this)!;
+  TextTheme get styles => Theme.of(this).textTheme;
+  ColorScheme get colors => Theme.of(this).colorScheme;
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
-  double get displayScale => MediaQuery.of(this).devicePixelRatio;
-  bool get isLTR => Directionality.of(this) == TextDirection.ltr;
 
   Size get size => MediaQuery.of(this).size;
   double get width => size.width;
@@ -58,64 +57,11 @@ extension MockableDateTime on DateTime {
 }
 
 extension WidgetX on Widget {
-  Widget debugBorder() {
-    if (kDebugMode) {
-      return Container(
-        decoration: BoxDecoration(
-          border: Border.all(width: 0.5, color: Colors.red),
-        ),
-        child: Stack(
-          children: [
-            this,
-            // show the size of the widget
-            Positioned.fill(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text(
-                              'width: ${constraints.maxWidth}, height: ${constraints.maxHeight}',
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Container(color: Colors.red.withOpacity(0.3)),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return this;
-    }
-  }
-
   Widget px(double value) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: value),
       child: this,
     );
-  }
-
-  Widget debugGrid() {
-    if (kDebugMode) {
-      return GridPaper(
-        color: Colors.red.withOpacity(0.5),
-        divisions: 2,
-        interval: 100,
-        subdivisions: 5,
-        child: this,
-      );
-    }
-
-    return this;
   }
 }
 

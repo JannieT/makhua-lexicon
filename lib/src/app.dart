@@ -6,7 +6,7 @@ import 'settings/settings_manager.dart';
 import 'shared/extensions.dart';
 import 'shared/routes.dart';
 import 'shared/services/service_locator.dart';
-import 'shared/styles.dart';
+import 'shared/theme.dart';
 
 /// The Widget that configures your application.
 class LexiconApp extends StatelessWidget {
@@ -14,6 +14,8 @@ class LexiconApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = MaterialTheme(context);
+
     return Watch((_) {
       final themeMode = get<SettingsManager>().themeMode;
 
@@ -30,8 +32,8 @@ class LexiconApp extends StatelessWidget {
         onGenerateTitle: (context) => context.tr.appTitle,
 
         // app theme
-        theme: styles.themeLight,
-        darkTheme: styles.themeDark,
+        theme: theme.light,
+        darkTheme: theme.dark,
         themeMode: themeMode,
 
         // app routes

@@ -96,8 +96,62 @@ abstract class AppLocalizations {
   /// The title of the application
   ///
   /// In en, this message translates to:
-  /// **'App title goes here'**
+  /// **'Makhua Shirima Lexicon'**
   String get appTitle;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Makhua Shirima Lexicon'**
+  String get loginTitle;
+
+  /// No description provided for @loginLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get loginLabel;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email cannot be empty'**
+  String get emailRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password cannot be empty'**
+  String get passwordRequired;
+
+  /// No description provided for @userDoesntExistsWithGivenEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'No user with this email'**
+  String get userDoesntExistsWithGivenEmail;
+
+  /// No description provided for @invalidEmailOrPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password'**
+  String get invalidEmailOrPassword;
+
+  /// No description provided for @somethingWentWrongPleaseTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong, please try again'**
+  String get somethingWentWrongPleaseTryAgain;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
