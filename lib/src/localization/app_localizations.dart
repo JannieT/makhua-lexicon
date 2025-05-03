@@ -152,6 +152,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong, please try again'**
   String get somethingWentWrongPleaseTryAgain;
+
+  /// Placeholder text for the search field in the filter bar
+  ///
+  /// In en, this message translates to:
+  /// **'Search entries...'**
+  String get searchEntries;
+
+  /// Label for the latest entries filter chip
+  ///
+  /// In en, this message translates to:
+  /// **'Latest'**
+  String get latest;
+
+  /// Message shown when no entries match the current filter
+  ///
+  /// In en, this message translates to:
+  /// **'No entries found'**
+  String get noEntriesFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

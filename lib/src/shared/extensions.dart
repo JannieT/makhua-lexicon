@@ -67,6 +67,10 @@ extension WidgetX on Widget {
 
 extension ColorX on Color {
   ColorFilter get colorFilter => ColorFilter.mode(this, BlendMode.srcIn);
+
+  /// Creates a copy of this color with the given opacity.
+  /// The opacity is a value between 0.0 (fully transparent) and 1.0 (fully opaque).
+  Color withTransparency(double opacity) => withValues(alpha: opacity);
 }
 
 // Adds a method to the Iterable class that allows you to intersperse a separator between each element of the iterable.

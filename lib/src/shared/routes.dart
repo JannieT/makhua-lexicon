@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../maintain/lookup_screen.dart';
+import '../maintain/index_screen.dart';
 import '../settings/settings_screen.dart';
 import '../users/auth_guard.dart';
 import '../users/signin_screen.dart';
@@ -14,7 +14,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const LookupScreen();
+        return const IndexScreen();
       },
       routes: const [],
     ),

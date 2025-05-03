@@ -4,10 +4,20 @@ class Entry {
   final String? partOfSpeech;
   final String definition;
   final String? exampleSentence;
+  final List<int> flags;
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  Entry({required this.id, required this.headword, required this.definition, required this.createdAt, required this.updatedAt, this.exampleSentence, this.partOfSpeech});
+  Entry({
+    required this.id,
+    required this.headword,
+    required this.definition,
+    required this.createdAt,
+    required this.updatedAt,
+    this.exampleSentence,
+    this.partOfSpeech,
+    this.flags = const [],
+  });
 }
 
 // partOfSpeech enum

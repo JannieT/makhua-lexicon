@@ -11,5 +11,17 @@
   "passwordRequired": "Password cannot be empty",
   "userDoesntExistsWithGivenEmail": "No user with this email",
   "invalidEmailOrPassword": "Invalid email or password",
-  "somethingWentWrongPleaseTryAgain": "Something went wrong, please try again"
+  "somethingWentWrongPleaseTryAgain": "Something went wrong, please try again",
+  "searchEntries": "Search entries...",
+  "@searchEntries": {
+    "description": "Placeholder text for the search field in the filter bar"
+  },
+  "latest": "Latest",
+  "@latest": {
+    "description": "Label for the latest entries filter chip"
+  },
+  "noEntriesFound": "No entries found",
+  "@noEntriesFound": {
+    "description": "Message shown when no entries match the current filter"
+  }
 }

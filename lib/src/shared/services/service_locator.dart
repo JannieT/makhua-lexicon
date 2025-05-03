@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import '../../maintain/index_manager.dart';
 import '../../settings/settings_manager.dart';
 import '../../settings/settings_service.dart';
 import 'analytics_service.dart';
@@ -15,5 +16,11 @@ Future<void> registerServices() async {
   get.registerSingleton<DatabaseService>(DatabaseService());
   get.registerSingleton<SettingsManager>(
     SettingsManager(SettingsService(store)),
+  );
+  get.registerSingleton<IndexManager>(
+    IndexManager(),
+    dispose: (manager) {
+      manager.dispose();
+    },
   );
 }

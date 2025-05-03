@@ -37,4 +37,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get somethingWentWrongPleaseTryAgain => 'Something went wrong, please try again';
+
+  @override
+  String get searchEntries => 'Search entries...';
+
+  @override
+  String get latest => 'Latest';
+
+  @override
+  String get noEntriesFound => 'No entries found';
 }
