@@ -23,5 +23,75 @@
   "noEntriesFound": "No entries found",
   "@noEntriesFound": {
     "description": "Message shown when no entries match the current filter"
+  },
+  "updatedAt": "Updated {time}",
+  "@updatedAt": {
+    "description": "Shows when an entry was last updated",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2d ago"
+      }
+    }
+  },
+  "timeAgoMinutes": "{minutes} minutes ago",
+  "@timeAgoMinutes": {
+    "description": "Shows time in minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "timeAgoHours": "{hours} hours ago",
+  "@timeAgoHours": {
+    "description": "Shows time in hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "timeAgoDays": "{days} days ago",
+  "@timeAgoDays": {
+    "description": "Shows time in days ago",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "timeAgoWeeks": "{weeks} weeks ago",
+  "@timeAgoWeeks": {
+    "description": "Shows time in weeks ago",
+    "placeholders": {
+      "weeks": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "timeAgoMonths": "{months} months ago",
+  "@timeAgoMonths": {
+    "description": "Shows time in months ago",
+    "placeholders": {
+      "months": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "timeAgoYears": "{years} years ago",
+  "@timeAgoYears": {
+    "description": "Shows time in years ago",
+    "placeholders": {
+      "years": {
+        "type": "int",
+        "example": "1"
+      }
+    }
   }
 }

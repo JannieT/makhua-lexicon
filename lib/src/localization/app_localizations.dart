@@ -170,6 +170,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No entries found'**
   String get noEntriesFound;
+
+  /// Shows when an entry was last updated
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {time}'**
+  String updatedAt(String time);
+
+  /// Shows time in minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes ago'**
+  String timeAgoMinutes(int minutes);
+
+  /// Shows time in hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hours ago'**
+  String timeAgoHours(int hours);
+
+  /// Shows time in days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days ago'**
+  String timeAgoDays(int days);
+
+  /// Shows time in weeks ago
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks} weeks ago'**
+  String timeAgoWeeks(int weeks);
+
+  /// Shows time in months ago
+  ///
+  /// In en, this message translates to:
+  /// **'{months} months ago'**
+  String timeAgoMonths(int months);
+
+  /// Shows time in years ago
+  ///
+  /// In en, this message translates to:
+  /// **'{years} years ago'**
+  String timeAgoYears(int years);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
