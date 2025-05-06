@@ -37,6 +37,7 @@ class IndexScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(28.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [const FilterBar(), Expanded(child: IndexGrid())],
         ),
       ),

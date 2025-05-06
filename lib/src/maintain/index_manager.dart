@@ -30,14 +30,21 @@ class IndexManager {
     gridEntries.value = getFilteredEntries();
   }
 
+  final _isBusy = signal<bool>(false);
+  bool get isBusy => _isBusy.value;
+  bool get shouldShowEmpty =>
+      !isBusy && searchController.text.isEmpty && gridEntries.value.isEmpty;
+
   Future<void> _loadEntries() async {
+    _isBusy.value = true;
     final fresh = await Future.delayed(
-      const Duration(seconds: 1),
+      const Duration(seconds: 2),
       () => mockEntries,
     );
     _allEntries.clear();
     _allEntries.addAll(fresh);
     gridEntries.value = getFilteredEntries();
+    _isBusy.value = false;
   }
 
   void resetSearch() {
@@ -66,7 +73,7 @@ class IndexManager {
       // Filter by latest entries
       case IndexFilter.latest:
         filtered.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-        return filtered.take(3).toList();
+        return filtered.take(20).toList();
 
       case IndexFilter.flag1:
         flag = 1;
