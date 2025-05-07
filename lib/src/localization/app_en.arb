@@ -93,5 +93,25 @@
         "example": "1"
       }
     }
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Label for the add button in the new card widget"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Title for the settings screen"
+  },
+  "systemTheme": "System Theme",
+  "@systemTheme": {
+    "description": "Label for the system theme option"
+  },
+  "lightTheme": "Light Theme",
+  "@lightTheme": {
+    "description": "Label for the light theme option"
+  },
+  "darkTheme": "Dark Theme",
+  "@darkTheme": {
+    "description": "Label for the dark theme option"
   }
 }

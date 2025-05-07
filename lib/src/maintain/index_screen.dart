@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../settings/settings_screen.dart';
+import '../shared/extensions.dart';
 import 'filter_bar.dart';
 import 'index_grid.dart';
 
@@ -16,7 +17,7 @@ class IndexScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Makhua Shirima Lexicon'),
+        title: Text(context.tr.appTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),

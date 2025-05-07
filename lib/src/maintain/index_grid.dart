@@ -54,8 +54,6 @@ class IndexGrid extends StatelessWidget {
   _cardList(List<Entry> entries) {
     final manager = get<IndexManager>();
 
-    return List.generate(4, (index) => LoadingCard());
-    return entries.map((e) => IndexCard(e)).toList();
     if (manager.isBusy) {
       return List.generate(4, (index) => LoadingCard());
     }

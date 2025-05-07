@@ -33,7 +33,12 @@ class NewCard extends StatelessWidget {
 
             const Spacer(),
             // Add a button to add a new word
-            FilledButton(onPressed: () {}, child: const Text('Add')),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FilledButton(onPressed: () {}, child: Text(context.tr.add)),
+              ],
+            ),
           ],
         ),
       ),

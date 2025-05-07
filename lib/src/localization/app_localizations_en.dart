@@ -81,4 +81,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String timeAgoYears(int years) {
     return '$years years ago';
   }
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get systemTheme => 'System Theme';
+
+  @override
+  String get lightTheme => 'Light Theme';
+
+  @override
+  String get darkTheme => 'Dark Theme';
 }
