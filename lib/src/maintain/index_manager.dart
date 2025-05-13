@@ -37,10 +37,7 @@ class IndexManager {
 
   Future<void> _loadEntries() async {
     _isBusy.value = true;
-    final fresh = await Future.delayed(
-      const Duration(seconds: 2),
-      () => mockEntries,
-    );
+    final fresh = await Future.delayed(const Duration(seconds: 2), () => mockEntries);
     _allEntries.clear();
     _allEntries.addAll(fresh);
     gridEntries.value = getFilteredEntries();
@@ -49,6 +46,25 @@ class IndexManager {
 
   void resetSearch() {
     searchController.clear();
+  }
+
+  void createEntry(String headword) {
+    final now = DateTime.now();
+    final id = Entry.getValidFirestoreId(headword);
+
+    final entry = Entry(
+      id: id,
+      headword: headword,
+      definition: '',
+      flags: [1], // default flag
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    _allEntries.add(entry);
+
+    // Reset the filter to latest to show the new entry
+    filter = IndexFilter.latest;
   }
 
   List<Entry> getFilteredEntries() {
@@ -87,6 +103,14 @@ class IndexManager {
     }
 
     return filtered.where((entry) => entry.flags.contains(flag)).toList();
+  }
+
+  Entry? getEntry(String? id) {
+    try {
+      return _allEntries.firstWhere((entry) => entry.id == id);
+    } catch (e) {
+      return null;
+    }
   }
 
   void dispose() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../maintain/card_screen.dart';
 import '../maintain/index_screen.dart';
 import '../settings/settings_screen.dart';
 import '../users/auth_guard.dart';
@@ -16,7 +17,15 @@ final GoRouter routes = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const IndexScreen();
       },
-      routes: const [],
+      routes: [
+        GoRoute(
+          path: 'entry/:id',
+          builder: (BuildContext context, GoRouterState state) {
+            final entryId = state.pathParameters['id'];
+            return CardScreen(entryId);
+          },
+        ),
+      ],
     ),
     GoRoute(
       path: SettingsView.routeName,

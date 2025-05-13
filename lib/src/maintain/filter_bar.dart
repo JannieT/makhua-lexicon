@@ -47,20 +47,11 @@ class FilterBar extends StatelessWidget {
             // Flag color options
             Row(
               children: [
-                _FlagColorOption(
-                  color: context.colors.primary,
-                  filter: IndexFilter.flag1,
-                ),
+                _FlagColorOption(color: context.colors.primary, filter: IndexFilter.flag1),
                 const SizedBox(width: 8),
-                _FlagColorOption(
-                  color: context.colors.secondary,
-                  filter: IndexFilter.flag2,
-                ),
+                _FlagColorOption(color: context.colors.secondary, filter: IndexFilter.flag2),
                 const SizedBox(width: 8),
-                _FlagColorOption(
-                  color: context.colors.tertiary,
-                  filter: IndexFilter.flag3,
-                ),
+                _FlagColorOption(color: context.colors.tertiary, filter: IndexFilter.flag3),
               ],
             ),
           ],
@@ -90,10 +81,7 @@ class _FlagColorOption extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
           border: Border.all(
-            color:
-                isSelected
-                    ? context.colors.secondaryContainer
-                    : Colors.transparent,
+            color: isSelected ? context.colors.secondaryContainer : Colors.transparent,
             width: 5,
           ),
         ),

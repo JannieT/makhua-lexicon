@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../shared/extensions.dart';
+import '../shared/services/service_locator.dart';
+import 'index_manager.dart';
 
 class NewCard extends StatelessWidget {
   final String headword;
@@ -17,9 +19,7 @@ class NewCard extends StatelessWidget {
             // Headword with flags
             Row(
               children: [
-                Expanded(
-                  child: Text(headword, style: context.styles.titleLarge),
-                ),
+                Expanded(child: Text(headword, style: context.styles.titleLarge)),
                 Container(
                   width: 12,
                   height: 12,
@@ -36,11 +36,29 @@ class NewCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                FilledButton(onPressed: () {}, child: Text(context.tr.add)),
+                FilledButton(
+                  onPressed: () => _addNewEntry(context),
+                  child: Text(context.tr.add),
+                ),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _addNewEntry(BuildContext context) {
+    final manager = get<IndexManager>();
+
+    // Create a new entry with the headword
+    manager.createEntry(headword);
+
+    // Show a snackbar to indicate success
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Added "$headword" to the lexicon'),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
