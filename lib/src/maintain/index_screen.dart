@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../settings/settings_screen.dart';
 import '../shared/extensions.dart';
+import '../shared/services/service_locator.dart';
+import '../shared/services/store_service.dart';
 import 'filter_bar.dart';
 import 'index_grid.dart';
 
@@ -22,9 +24,7 @@ class IndexScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              if (!context.mounted) return;
-              context.go('/signin');
+              await _signOut(context);
             },
           ),
           IconButton(
@@ -43,5 +43,13 @@ class IndexScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    final store = get<StoreService>();
+    await store.clearCredentials();
+    await FirebaseAuth.instance.signOut();
+    if (!context.mounted) return;
+    context.go('/signin');
   }
 }

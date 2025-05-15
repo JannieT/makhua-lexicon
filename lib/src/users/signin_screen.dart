@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../shared/extensions.dart';
+import '../shared/services/service_locator.dart';
+import '../shared/services/store_service.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -107,6 +109,12 @@ class SigninScreenState extends State<SigninScreen> {
         password: _passwordController.text,
       );
 
+      final store = get<StoreService>();
+      await store.saveCredentials(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
       setState(() {
         _errorMessage = '';
         _isBusy = false;
@@ -132,6 +140,16 @@ class SigninScreenState extends State<SigninScreen> {
     });
   }
 
+  Future<void> _loadSavedCredentials() async {
+    final store = get<StoreService>();
+    if (store.hasCredentials) {
+      setState(() {
+        _emailController.text = store.email ?? '';
+        _passwordController.text = store.password ?? '';
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -139,6 +157,7 @@ class SigninScreenState extends State<SigninScreen> {
     _errorMessage = '';
     _emailController = TextEditingController()..clear();
     _passwordController = TextEditingController()..clear();
+    _loadSavedCredentials();
   }
 
   @override
