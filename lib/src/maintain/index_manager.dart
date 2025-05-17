@@ -2,8 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../shared/models/entry.dart';
+import '../shared/models/flags.dart';
 
-enum IndexFilter { search, latest, flag1, flag2, flag3 }
+enum IndexFilter {
+  search,
+  latest,
+  isDraft,
+  needsReviewOne,
+  needsReviewTwo;
+
+  int get flagNumber => switch (this) {
+    isDraft => 1,
+    needsReviewOne => 2,
+    needsReviewTwo => 3,
+    _ => 0,
+  };
+}
 
 class IndexManager {
   IndexManager() {
@@ -22,6 +36,15 @@ class IndexManager {
       searchController.clear();
     }
     gridEntries.value = getFilteredEntries();
+  }
+
+  void setFilterFlag(Flag flag) {
+    final newFilter = switch (flag) {
+      Flag.isDraft => IndexFilter.isDraft,
+      Flag.needsReviewOne => IndexFilter.needsReviewOne,
+      Flag.needsReviewTwo => IndexFilter.needsReviewTwo,
+    };
+    filter = newFilter;
   }
 
   final searchController = TextEditingController();
@@ -67,9 +90,16 @@ class IndexManager {
     filter = IndexFilter.latest;
   }
 
+  void updateEntry(Entry entry) {
+    final index = _allEntries.indexWhere((e) => e.id == entry.id);
+    if (index == -1) return;
+
+    _allEntries[index] = entry;
+    gridEntries.value = getFilteredEntries();
+  }
+
   List<Entry> getFilteredEntries() {
     var filtered = _allEntries;
-    var flag = 3;
 
     switch (filter) {
       case IndexFilter.search:
@@ -91,18 +121,11 @@ class IndexManager {
         filtered.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
         return filtered.take(20).toList();
 
-      case IndexFilter.flag1:
-        flag = 1;
-        break;
-      case IndexFilter.flag2:
-        flag = 2;
-        break;
-      case IndexFilter.flag3:
-        flag = 3;
-        break;
+      default:
+        return filtered
+            .where((entry) => entry.flags.contains(filter.flagNumber))
+            .toList();
     }
-
-    return filtered.where((entry) => entry.flags.contains(flag)).toList();
   }
 
   Entry? getEntry(String? id) {
@@ -202,7 +225,7 @@ final List<Entry> mockEntries = [
   Entry(
     id: 'ai',
     headword: 'ai',
-    partOfSpeech: 'Interjeição',
+    partOfSpeech: null,
     definition: 'Expressão de dor ou surpresa',
     exampleSentence: 'Ai! Meu dedo!',
     flags: [3],

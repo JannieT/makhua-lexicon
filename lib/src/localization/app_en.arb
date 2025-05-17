@@ -129,5 +129,85 @@
   "goBack": "Go Back",
   "@goBack": {
     "description": "Label for the go back button"
+  },
+  "definition": "Definition",
+  "@definition": {
+    "description": "Label for the definition field"
+  },
+  "definitionRequired": "Definition is required",
+  "@definitionRequired": {
+    "description": "Error message when definition is empty"
+  },
+  "partOfSpeech": "Part of Speech",
+  "@partOfSpeech": {
+    "description": "Label for the part of speech field"
+  },
+  "exampleSentence": "Example Sentence",
+  "@exampleSentence": {
+    "description": "Label for the example sentence field"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Label for the save button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Label for the cancel button"
+  },
+  "changesSaved": "Changes saved successfully",
+  "@changesSaved": {
+    "description": "Message shown when changes are saved successfully"
+  },
+  "flags": "Flags",
+  "@flags": {
+    "description": "Label for the flags section"
+  },
+  "isDraft": "Draft",
+  "@isDraft": {
+    "description": "Label for the draft flag"
+  },
+  "needsReviewOne": "Needs Review 1",
+  "@needsReviewOne": {
+    "description": "Label for the first review flag"
+  },
+  "needsReviewTwo": "Needs Review 2",
+  "@needsReviewTwo": {
+    "description": "Label for the second review flag"
+  },
+  "none": "None",
+  "@none": {
+    "description": "Label for when we do not know the part of speech"
+  },
+  "noun": "Noun",
+  "@noun": {
+    "description": "Label for noun part of speech"
+  },
+  "verb": "Verb",
+  "@verb": {
+    "description": "Label for verb part of speech"
+  },
+  "adjective": "Adjective",
+  "@adjective": {
+    "description": "Label for adjective part of speech"
+  },
+  "adverb": "Adverb",
+  "@adverb": {
+    "description": "Label for adverb part of speech"
+  },
+  "pronoun": "Pronoun",
+  "@pronoun": {
+    "description": "Label for pronoun part of speech"
+  },
+  "preposition": "Preposition",
+  "@preposition": {
+    "description": "Label for preposition part of speech"
+  },
+  "conjunction": "Conjunction",
+  "@conjunction": {
+    "description": "Label for conjunction part of speech"
+  },
+  "interjection": "Interjection",
+  "@interjection": {
+    "description": "Label for interjection part of speech"
   }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../shared/extensions.dart';
+import '../shared/models/flags.dart';
 import '../shared/services/service_locator.dart';
+import 'flag_button.dart';
 import 'index_manager.dart';
 
 class FilterBar extends StatelessWidget {
@@ -45,47 +47,18 @@ class FilterBar extends StatelessWidget {
             const SizedBox(width: 8),
 
             // Flag color options
-            Row(
-              children: [
-                _FlagColorOption(color: context.colors.primary, filter: IndexFilter.flag1),
-                const SizedBox(width: 8),
-                _FlagColorOption(color: context.colors.secondary, filter: IndexFilter.flag2),
-                const SizedBox(width: 8),
-                _FlagColorOption(color: context.colors.tertiary, filter: IndexFilter.flag3),
-              ],
-            ),
+            ...Flag.values
+                .map<Widget>(
+                  (flag) => FlagButton(
+                    flag: flag,
+                    isSelected: manager.filter.flagNumber == flag.number,
+                    onTap: manager.setFilterFlag,
+                  ),
+                )
+                .intersperse(const SizedBox(width: 8)),
           ],
         ),
       );
     });
-  }
-}
-
-class _FlagColorOption extends StatelessWidget {
-  const _FlagColorOption({required this.color, required this.filter});
-
-  final Color color;
-  final IndexFilter filter;
-
-  @override
-  Widget build(BuildContext context) {
-    final manager = get<IndexManager>();
-    final isSelected = manager.filter == filter;
-
-    return GestureDetector(
-      onTap: () => manager.filter = filter,
-      child: Container(
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isSelected ? context.colors.secondaryContainer : Colors.transparent,
-            width: 5,
-          ),
-        ),
-      ),
-    );
   }
 }

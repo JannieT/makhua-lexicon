@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import '../shared/extensions.dart';
 import '../shared/models/entry.dart';
+import '../shared/models/flags.dart';
+import 'flag_button.dart';
 
 class IndexCard extends StatelessWidget {
   const IndexCard(this.entry, {super.key});
@@ -22,40 +24,21 @@ class IndexCard extends StatelessWidget {
               // Headword with flags
               Row(
                 children: [
-                  Expanded(
-                    child: Text(entry.headword, style: context.styles.titleLarge),
-                  ),
+                  Expanded(child: Text(entry.headword, style: context.styles.titleLarge)),
                   if (entry.flags.isNotEmpty) ...[
                     const SizedBox(width: 8),
-                    Wrap(
-                      spacing: 4,
-                      children:
-                          entry.flags.map((flag) {
-                            final color = switch (flag) {
-                              1 => context.colors.primary,
-                              2 => context.colors.secondary,
-                              3 => context.colors.tertiary,
-                              _ => context.colors.primary,
-                            };
-                            return Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: color,
-                                shape: BoxShape.circle,
-                              ),
-                            );
-                          }).toList(),
-                    ),
+                    ...entry.flags
+                        .map<Widget>((number) {
+                          final flag = Flag.fromNumber(number);
+                          return FlagButton(flag: flag);
+                        })
+                        .intersperse(const SizedBox(width: 4)),
                   ],
                 ],
               ),
               const SizedBox(height: 8),
               // Definition
-              Text(
-                entry.definition,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              Text(entry.definition, style: Theme.of(context).textTheme.bodyMedium),
               const Spacer(),
               // Updated at
               Text(

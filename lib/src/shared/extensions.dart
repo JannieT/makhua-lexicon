@@ -31,8 +31,7 @@ extension ExtendBuildContext on BuildContext {
 
   String get location {
     final router = GoRouter.of(this);
-    final RouteMatch lastMatch =
-        router.routerDelegate.currentConfiguration.last;
+    final RouteMatch lastMatch = router.routerDelegate.currentConfiguration.last;
     final RouteMatchList matchList =
         lastMatch is ImperativeRouteMatch
             ? lastMatch.matches
@@ -58,10 +57,7 @@ extension MockableDateTime on DateTime {
 
 extension WidgetX on Widget {
   Widget px(double value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: value),
-      child: this,
-    );
+    return Padding(padding: EdgeInsets.symmetric(horizontal: value), child: this);
   }
 }
 
