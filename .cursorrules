@@ -40,14 +40,14 @@ Key Conventions
 7. Put state management related codes in manager files.
 8. Use Watch((\_) { ... }) from signals to rebuild for state variables.
 9. Use getters and setters to access Signal variables.
-10. Use get<>() to get services from get_it.
+10. Use `get<MyService>()` to get services from get_it.
 11. Cache responses from api calls using store_service.dart file.
 12. Create enum keys for storing values in store_service.dart file.
 
 Literal strings
 
 all literal strings in the UI should:
-- be added in app_en.arb file
+- be added in lib/src/localization/app_en.arb file with a description
 - referenced via the build context extension like this:  `text: context.tr.somethingWentWrong`
 
 UI and Styling

@@ -98,6 +98,12 @@ class IndexManager {
     gridEntries.value = getFilteredEntries();
   }
 
+  Future<void> deleteEntry(String id) async {
+    // await FirebaseFirestore.instance.collection('entries').doc(id).delete();
+    _allEntries.removeWhere((entry) => entry.id == id);
+    gridEntries.value = getFilteredEntries();
+  }
+
   List<Entry> getFilteredEntries() {
     var filtered = _allEntries;
 

@@ -42,6 +42,7 @@ class _EntryScreenState extends State<EntryScreen> {
             if (!_isDirty.value) return const SizedBox.shrink();
             return TextButton(onPressed: _onSave, child: Text(context.tr.save));
           }),
+          IconButton(icon: const Icon(Icons.delete), onPressed: _onDelete),
         ],
       ),
       body: SingleChildScrollView(
@@ -180,6 +181,47 @@ class _EntryScreenState extends State<EntryScreen> {
         content: Text(context.tr.changesSaved),
         behavior: SnackBarBehavior.floating,
       ),
+    );
+  }
+
+  void _onDelete() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(context.tr.deleteEntry),
+            content: Text(context.tr.deleteEntryConfirmation),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(context.tr.cancel),
+              ),
+              TextButton(
+                onPressed: () async {
+                  // Pop the dialog to close it
+                  Navigator.pop(context);
+
+                  // Delete the entry
+                  final manager = get<IndexManager>();
+                  try {
+                    await manager.deleteEntry(_entry!.id);
+                    if (!context.mounted) return;
+
+                    // Pop the entry screen to close it
+                    Navigator.pop(context);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(context.tr.errorDeletingEntry),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+                child: Text(context.tr.delete),
+              ),
+            ],
+          ),
     );
   }
 
