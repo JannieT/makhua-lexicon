@@ -14,11 +14,9 @@ Future<void> registerServices() async {
   get.registerSingleton<StoreService>(store);
   get.registerSingleton<AnalyticsService>(AnalyticsService());
   get.registerSingleton<DatabaseService>(DatabaseService());
-  get.registerSingleton<SettingsManager>(
-    SettingsManager(SettingsService(store)),
-  );
+  get.registerSingleton<SettingsManager>(SettingsManager(SettingsService(store)));
   get.registerSingleton<IndexManager>(
-    IndexManager(),
+    IndexManager(store, get<DatabaseService>()),
     dispose: (manager) {
       manager.dispose();
     },

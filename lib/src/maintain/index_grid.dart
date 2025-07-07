@@ -51,7 +51,7 @@ class IndexGrid extends StatelessWidget {
     });
   }
 
-  _cardList(List<Entry> entries) {
+  List<Widget> _cardList(List<Entry> entries) {
     final manager = get<IndexManager>();
 
     if (manager.isBusy) {

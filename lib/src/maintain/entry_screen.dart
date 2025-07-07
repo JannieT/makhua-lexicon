@@ -6,6 +6,7 @@ import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
 import '../shared/models/parts_of_speech.dart';
 import '../shared/services/service_locator.dart';
+import '../shared/services/store_service.dart';
 import '../shared/widgets/not_found.dart';
 import 'flag_button.dart';
 import 'index_manager.dart';
@@ -59,26 +60,25 @@ class _EntryScreenState extends State<EntryScreen> {
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
-                children:
-                    Flag.values.map((flag) {
-                      return Watch((_) {
-                        final isSelected = _selectedFlags.value.contains(flag);
-                        return FlagButton(
-                          flag: flag,
-                          isSelected: isSelected,
-                          onTap: (flag) {
-                            final flags = List<Flag>.from(_selectedFlags.value);
-                            if (isSelected) {
-                              flags.remove(flag);
-                            } else {
-                              flags.add(flag);
-                            }
-                            _selectedFlags.value = flags;
-                            _isDirty.value = true;
-                          },
-                        );
-                      });
-                    }).toList(),
+                children: Flag.values.map((flag) {
+                  return Watch((_) {
+                    final isSelected = _selectedFlags.value.contains(flag);
+                    return FlagButton(
+                      flag: flag,
+                      isSelected: isSelected,
+                      onTap: (flag) {
+                        final flags = List<Flag>.from(_selectedFlags.value);
+                        if (isSelected) {
+                          flags.remove(flag);
+                        } else {
+                          flags.add(flag);
+                        }
+                        _selectedFlags.value = flags;
+                        _isDirty.value = true;
+                      },
+                    );
+                  });
+                }).toList(),
               ),
               const SizedBox(height: 24),
 
@@ -158,6 +158,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
   void _onSave() {
     if (!_formKey.currentState!.validate()) return;
+    final store = get<StoreService>();
 
     final entry = _entry!;
 
@@ -170,6 +171,7 @@ class _EntryScreenState extends State<EntryScreen> {
       flags: _selectedFlags.value.map((f) => f.number).toList(),
       createdAt: entry.createdAt,
       updatedAt: DateTime.now(),
+      updatedBy: store.email ?? '',
     );
 
     final manager = get<IndexManager>();
@@ -187,41 +189,40 @@ class _EntryScreenState extends State<EntryScreen> {
   void _onDelete() {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(context.tr.deleteEntry),
-            content: Text(context.tr.deleteEntryConfirmation),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(context.tr.cancel),
-              ),
-              TextButton(
-                onPressed: () async {
-                  // Pop the dialog to close it
-                  Navigator.pop(context);
-
-                  // Delete the entry
-                  final manager = get<IndexManager>();
-                  try {
-                    await manager.deleteEntry(_entry!.id);
-                    if (!context.mounted) return;
-
-                    // Pop the entry screen to close it
-                    Navigator.pop(context);
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(context.tr.errorDeletingEntry),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  }
-                },
-                child: Text(context.tr.delete),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: Text(context.tr.deleteEntry),
+        content: Text(context.tr.deleteEntryConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.tr.cancel),
           ),
+          TextButton(
+            onPressed: () async {
+              // Pop the dialog to close it
+              Navigator.pop(context);
+
+              // Delete the entry
+              final manager = get<IndexManager>();
+              try {
+                await manager.deleteEntry(_entry!.id);
+                if (!context.mounted) return;
+
+                // Pop the entry screen to close it
+                Navigator.pop(context);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(context.tr.errorDeletingEntry),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+            child: Text(context.tr.delete),
+          ),
+        ],
+      ),
     );
   }
 
@@ -237,13 +238,12 @@ class _EntryScreenState extends State<EntryScreen> {
     _definitionController = TextEditingController(text: _entry?.definition);
     _exampleSentenceController = TextEditingController(text: _entry?.exampleSentence);
     _selectedFlags.value = _entry?.flags.map((n) => Flag.fromNumber(n)).toList() ?? [];
-    _selectedPartOfSpeech.value =
-        _entry?.partOfSpeech != null
-            ? PartOfSpeech.values.firstWhere(
-              (pos) => pos.name == _entry?.partOfSpeech,
-              orElse: () => PartOfSpeech.noun,
-            )
-            : null;
+    _selectedPartOfSpeech.value = _entry?.partOfSpeech != null
+        ? PartOfSpeech.values.firstWhere(
+            (pos) => pos.name == _entry?.partOfSpeech,
+            orElse: () => PartOfSpeech.noun,
+          )
+        : null;
 
     // Listen to changes in the text controllers
     _definitionController.addListener(_onTextChanged);

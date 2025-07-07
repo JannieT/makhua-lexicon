@@ -3,6 +3,8 @@ import 'package:signals/signals_flutter.dart';
 
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
+import '../shared/services/database_service.dart';
+import '../shared/services/store_service.dart';
 
 enum IndexFilter {
   search,
@@ -20,7 +22,10 @@ enum IndexFilter {
 }
 
 class IndexManager {
-  IndexManager() {
+  final StoreService _store;
+  final DatabaseService _db;
+
+  IndexManager(this._store, this._db) {
     _loadEntries();
   }
 
@@ -60,7 +65,8 @@ class IndexManager {
 
   Future<void> _loadEntries() async {
     _isBusy.value = true;
-    final fresh = await Future.delayed(const Duration(seconds: 2), () => mockEntries);
+    // final fresh = await Future.delayed(const Duration(seconds: 2), () => mockEntries);
+    final fresh = await _db.getEntries();
     _allEntries.clear();
     _allEntries.addAll(fresh);
     gridEntries.value = getFilteredEntries();
@@ -82,6 +88,7 @@ class IndexManager {
       flags: [1], // default flag
       createdAt: now,
       updatedAt: now,
+      updatedBy: _store.email ?? '',
     );
 
     _allEntries.add(entry);
@@ -146,96 +153,3 @@ class IndexManager {
     searchController.dispose();
   }
 }
-
-final List<Entry> mockEntries = [
-  Entry(
-    id: 'casa',
-    headword: 'casa',
-    partOfSpeech: 'Substantivo',
-    definition: 'Edifício onde as pessoas vivem',
-    exampleSentence: 'A minha casa é grande e confortável.',
-    flags: [1, 2],
-    createdAt: DateTime.now().subtract(const Duration(days: 30)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 5)),
-  ),
-  Entry(
-    id: 'correr',
-    headword: 'correr',
-    partOfSpeech: 'Verbo',
-    definition: 'Mover-se rapidamente usando os pés',
-    exampleSentence: 'Ele gosta de correr todas as manhãs.',
-    flags: [],
-    createdAt: DateTime.now().subtract(const Duration(days: 180)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 60)),
-  ),
-  Entry(
-    id: 'bonito',
-    headword: 'bonito',
-    partOfSpeech: 'Adjetivo',
-    definition: 'Que tem beleza, que agrada à vista',
-    exampleSentence: 'O vestido é muito bonito.',
-    flags: [3],
-    createdAt: DateTime.now().subtract(const Duration(days: 365)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 200)),
-  ),
-  Entry(
-    id: 'rapidamente',
-    headword: 'rapidamente',
-    partOfSpeech: 'Advérbio',
-    definition: 'De modo rápido, com velocidade',
-    exampleSentence: 'Ele terminou o trabalho rapidamente.',
-    flags: [1, 2, 3],
-    createdAt: DateTime.now().subtract(const Duration(days: 500)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 400)),
-  ),
-  Entry(
-    id: 'ele',
-    headword: 'ele',
-    partOfSpeech: 'Pronome',
-    definition: 'Pronome pessoal da terceira pessoa do singular',
-    exampleSentence: 'Ele está estudando para o exame.',
-    flags: [],
-    createdAt: DateTime.now().subtract(const Duration(days: 700)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 600)),
-  ),
-  Entry(
-    id: 'primeiro',
-    headword: 'primeiro',
-    partOfSpeech: 'Numeral',
-    definition: 'Que ocupa a posição inicial em uma sequência',
-    exampleSentence: 'Ele foi o primeiro a chegar.',
-    flags: [2],
-    createdAt: DateTime.now().subtract(const Duration(days: 730)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 700)),
-  ),
-  Entry(
-    id: 'com',
-    headword: 'com',
-    partOfSpeech: 'Preposição',
-    definition: 'Indica companhia, instrumento ou modo',
-    exampleSentence: 'Vou viajar com meus amigos.',
-    flags: [],
-    createdAt: DateTime.now().subtract(const Duration(days: 365)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 100)),
-  ),
-  Entry(
-    id: 'mas',
-    headword: 'mas',
-    partOfSpeech: 'Conjunção',
-    definition: 'Indica oposição ou contraste',
-    exampleSentence: 'Quero ir, mas estou cansado.',
-    flags: [1],
-    createdAt: DateTime.now().subtract(const Duration(days: 400)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 50)),
-  ),
-  Entry(
-    id: 'ai',
-    headword: 'ai',
-    partOfSpeech: null,
-    definition: 'Expressão de dor ou surpresa',
-    exampleSentence: 'Ai! Meu dedo!',
-    flags: [3],
-    createdAt: DateTime.now().subtract(const Duration(days: 200)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 10)),
-  ),
-];

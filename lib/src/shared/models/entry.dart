@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Entry {
   final String id;
   final String headword;
@@ -7,6 +9,7 @@ class Entry {
   final List<int> flags;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String updatedBy;
 
   Entry({
     required this.id,
@@ -17,7 +20,77 @@ class Entry {
     this.exampleSentence,
     this.partOfSpeech,
     this.flags = const [],
+    required this.updatedBy,
   });
+
+  static Entry fromJson(Map<String, dynamic> data) {
+    return Entry(
+      id: data['id'],
+      headword: data['headword'],
+      definition: data['definition'],
+      createdAt: _parseTimestamp(data['created_at']),
+      updatedAt: _parseTimestamp(data['updated_at']),
+      updatedBy: data['updated_by'],
+      exampleSentence: data['example_sentence'],
+      partOfSpeech: data['part_of_speech'],
+      flags: _parseFlags(data['flags']),
+    );
+  }
+
+  static DateTime _parseTimestamp(dynamic timestamp) {
+    if (timestamp is Timestamp) {
+      return timestamp.toDate();
+    } else if (timestamp is DateTime) {
+      return timestamp;
+    } else if (timestamp is String) {
+      try {
+        return DateTime.parse(timestamp);
+      } catch (e) {
+        // Fallback to current time if string parsing fails
+        return DateTime.now();
+      }
+    } else {
+      // Fallback to current time if timestamp is invalid
+      return DateTime.now();
+    }
+  }
+
+  static List<int> _parseFlags(dynamic flags) {
+    if (flags == null) return [];
+    if (flags is List) {
+      return flags.map((flag) {
+        if (flag is int) return flag;
+        if (flag is String) return int.tryParse(flag) ?? 0;
+        return 0; // fallback for any other type
+      }).toList();
+    }
+    return [];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'headword': headword,
+      'definition': definition,
+      'created_at': Timestamp.fromDate(createdAt),
+      'updated_at': Timestamp.fromDate(updatedAt),
+      'updated_by': updatedBy,
+      'example_sentence': exampleSentence,
+      'part_of_speech': partOfSpeech,
+      'flags': flags,
+    };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Entry) {
+      return id == other.id;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   /// Transforms a string to a valid Firestore document ID.
   ///
