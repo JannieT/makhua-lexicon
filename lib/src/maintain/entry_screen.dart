@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -156,7 +158,7 @@ class _EntryScreenState extends State<EntryScreen> {
         _selectedFlags.value.map((f) => f.number).toList() != _entry?.flags;
   }
 
-  void _onSave() {
+  Future<void> _onSave() async {
     if (!_formKey.currentState!.validate()) return;
     final store = get<StoreService>();
 
@@ -175,14 +177,20 @@ class _EntryScreenState extends State<EntryScreen> {
     );
 
     final manager = get<IndexManager>();
-    manager.updateEntry(updatedEntry);
-    _isDirty.value = false;
+    try {
+      await manager.updateEntry(updatedEntry);
+      _isDirty.value = false;
+    } catch (e) {
+      log('Error updating entry: $e');
+    }
+
+    if (!mounted) return;
+    final feedback = (_isDirty.value)
+        ? context.tr.errorUpdatingEntry
+        : context.tr.changesSaved;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.tr.changesSaved),
-        behavior: SnackBarBehavior.floating,
-      ),
+      SnackBar(content: Text(feedback), behavior: SnackBarBehavior.floating),
     );
   }
 

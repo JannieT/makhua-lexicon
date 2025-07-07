@@ -20,10 +20,7 @@ class LoadingCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(child: _blurredBox(context, text: 'aneene')),
-                ...[
-                  const SizedBox(width: 8),
-                  Wrap(spacing: 4, children: _dots(grey)),
-                ],
+                ...[const SizedBox(width: 8), Wrap(spacing: 4, children: _dots(grey))],
               ],
             ),
             const SizedBox(height: 8),

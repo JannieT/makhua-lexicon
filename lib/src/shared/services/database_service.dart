@@ -37,7 +37,7 @@ class DatabaseService {
     }
   }
 
-  // Future<void> addEntry(Entry entry) async {
-  //   await FirebaseFirestore.instance.collection('users').doc(user.id).set(user.toJson());
-  // }
+  Future<void> updateEntry(Entry entry) async {
+    await entries.doc(entry.id).update(entry.toJson());
+  }
 }

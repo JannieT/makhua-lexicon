@@ -97,12 +97,15 @@ class IndexManager {
     filter = IndexFilter.latest;
   }
 
-  void updateEntry(Entry entry) {
+  Future<void> updateEntry(Entry entry) async {
     final index = _allEntries.indexWhere((e) => e.id == entry.id);
     if (index == -1) return;
 
     _allEntries[index] = entry;
     gridEntries.value = getFilteredEntries();
+
+    // Update the database
+    await _db.updateEntry(entry);
   }
 
   Future<void> deleteEntry(String id) async {

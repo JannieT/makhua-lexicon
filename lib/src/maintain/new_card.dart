@@ -57,7 +57,7 @@ class NewCard extends StatelessWidget {
     // Show a snackbar to indicate success
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Added "$headword" to the lexicon'),
+        content: Text(context.tr.entryAddedToLexicon(headword)),
         behavior: SnackBarBehavior.floating,
       ),
     );
