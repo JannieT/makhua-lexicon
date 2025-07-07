@@ -1,0 +1,65 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter Web (Chrome)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "5000"
+            ]
+        },
+        {
+            "name": "Flutter Web (hot reloadable)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "5000",
+                "--web-experimental-hot-reload",
+            ]
+        },
+        {
+            "name": "Flutter Web (Chrome) - CanvasKit",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "5000",
+                "--web-renderer",
+                "canvaskit"
+            ]
+        },
+        {
+            "name": "Flutter Android",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "android",
+                "--flavor",
+                "development"
+            ]
+        },
+        {
+            "name": "Flutter Android (Profile Mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "args": [
+                "-d",
+                "android",
+                "--flavor",
+                "development"
+            ]
+        }
+    ]
+}
