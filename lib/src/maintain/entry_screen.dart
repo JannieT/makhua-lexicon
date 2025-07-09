@@ -50,100 +50,105 @@ class _EntryScreenState extends State<EntryScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 24),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
 
-              // Flags section
-              Text(context.tr.flags, style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: Flag.values.map((flag) {
-                  return Watch((_) {
-                    final isSelected = _selectedFlags.value.contains(flag);
-                    return FlagButton(
-                      flag: flag,
-                      isSelected: isSelected,
-                      onTap: (flag) {
-                        final flags = List<Flag>.from(_selectedFlags.value);
-                        if (isSelected) {
-                          flags.remove(flag);
-                        } else {
-                          flags.add(flag);
-                        }
-                        _selectedFlags.value = flags;
+                  // Flags section
+                  Text(context.tr.flags, style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: Flag.values.map((flag) {
+                      return Watch((_) {
+                        final isSelected = _selectedFlags.value.contains(flag);
+                        return FlagButton(
+                          flag: flag,
+                          isSelected: isSelected,
+                          onTap: (flag) {
+                            final flags = List<Flag>.from(_selectedFlags.value);
+                            if (isSelected) {
+                              flags.remove(flag);
+                            } else {
+                              flags.add(flag);
+                            }
+                            _selectedFlags.value = flags;
+                            _isDirty.value = true;
+                          },
+                        );
+                      });
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Editable fields
+                  TextFormField(
+                    controller: _definitionController,
+                    decoration: InputDecoration(
+                      labelText: context.tr.definition,
+                      border: const OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return context.tr.definitionRequired;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Watch((_) {
+                    return DropdownButtonFormField<PartOfSpeech?>(
+                      value: _selectedPartOfSpeech.value,
+                      decoration: InputDecoration(
+                        labelText: context.tr.partOfSpeech,
+                        border: const OutlineInputBorder(),
+                      ),
+                      items: [
+                        DropdownMenuItem<PartOfSpeech?>(
+                          value: null,
+                          child: Text(context.tr.none),
+                        ),
+                        ...PartOfSpeech.values.map((pos) {
+                          return DropdownMenuItem(
+                            value: pos,
+                            child: Text(switch (pos) {
+                              PartOfSpeech.noun => context.tr.noun,
+                              PartOfSpeech.verb => context.tr.verb,
+                              PartOfSpeech.adjective => context.tr.adjective,
+                              PartOfSpeech.adverb => context.tr.adverb,
+                              PartOfSpeech.pronoun => context.tr.pronoun,
+                              PartOfSpeech.preposition => context.tr.preposition,
+                              PartOfSpeech.conjunction => context.tr.conjunction,
+                              PartOfSpeech.interjection => context.tr.interjection,
+                            }),
+                          );
+                        }),
+                      ],
+                      onChanged: (value) {
+                        _selectedPartOfSpeech.value = value;
                         _isDirty.value = true;
                       },
                     );
-                  });
-                }).toList(),
-              ),
-              const SizedBox(height: 24),
-
-              // Editable fields
-              TextFormField(
-                controller: _definitionController,
-                decoration: InputDecoration(
-                  labelText: context.tr.definition,
-                  border: const OutlineInputBorder(),
-                ),
-                maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return context.tr.definitionRequired;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              Watch((_) {
-                return DropdownButtonFormField<PartOfSpeech?>(
-                  value: _selectedPartOfSpeech.value,
-                  decoration: InputDecoration(
-                    labelText: context.tr.partOfSpeech,
-                    border: const OutlineInputBorder(),
-                  ),
-                  items: [
-                    DropdownMenuItem<PartOfSpeech?>(
-                      value: null,
-                      child: Text(context.tr.none),
+                  }),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _exampleSentenceController,
+                    decoration: InputDecoration(
+                      labelText: context.tr.exampleSentence,
+                      border: const OutlineInputBorder(),
                     ),
-                    ...PartOfSpeech.values.map((pos) {
-                      return DropdownMenuItem(
-                        value: pos,
-                        child: Text(switch (pos) {
-                          PartOfSpeech.noun => context.tr.noun,
-                          PartOfSpeech.verb => context.tr.verb,
-                          PartOfSpeech.adjective => context.tr.adjective,
-                          PartOfSpeech.adverb => context.tr.adverb,
-                          PartOfSpeech.pronoun => context.tr.pronoun,
-                          PartOfSpeech.preposition => context.tr.preposition,
-                          PartOfSpeech.conjunction => context.tr.conjunction,
-                          PartOfSpeech.interjection => context.tr.interjection,
-                        }),
-                      );
-                    }),
-                  ],
-                  onChanged: (value) {
-                    _selectedPartOfSpeech.value = value;
-                    _isDirty.value = true;
-                  },
-                );
-              }),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _exampleSentenceController,
-                decoration: InputDecoration(
-                  labelText: context.tr.exampleSentence,
-                  border: const OutlineInputBorder(),
-                ),
-                maxLines: 2,
+                    maxLines: 2,
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
