@@ -44,9 +44,7 @@
             "type": "dart",
             "args": [
                 "-d",
-                "android",
-                "--flavor",
-                "development"
+                "emulator-5554"
             ]
         },
         {
