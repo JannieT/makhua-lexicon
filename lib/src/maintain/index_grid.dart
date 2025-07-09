@@ -58,11 +58,10 @@ class IndexGrid extends StatelessWidget {
       return List.generate(4, (index) => LoadingCard());
     }
 
-    if (manager.searchController.text.isNotEmpty && entries.isEmpty) {
-      return [NewCard(manager.searchController.text)];
-    }
+    final add = manager.showAddCard ? [NewCard(manager.searchController.text)] : [];
+    final found = entries.map((e) => IndexCard(e)).toList();
 
-    return entries.map((e) => IndexCard(e)).toList();
+    return [...found, ...add];
   }
 }
 

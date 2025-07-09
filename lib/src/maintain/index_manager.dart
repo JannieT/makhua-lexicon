@@ -63,6 +63,18 @@ class IndexManager {
   bool get shouldShowEmpty =>
       !isBusy && searchController.text.isEmpty && gridEntries.value.isEmpty;
 
+  bool get showAddCard {
+    if (searchController.text.isEmpty) return false;
+
+    // Check if there's an exact match for the search term
+    final searchTerm = searchController.text.toLowerCase();
+    final hasExactMatch = _allEntries.any(
+      (entry) => entry.headword.toLowerCase() == searchTerm,
+    );
+
+    return !hasExactMatch;
+  }
+
   Future<void> _loadEntries() async {
     _isBusy.value = true;
     // final fresh = await Future.delayed(const Duration(seconds: 2), () => mockEntries);
