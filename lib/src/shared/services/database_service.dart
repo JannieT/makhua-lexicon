@@ -37,7 +37,15 @@ class DatabaseService {
     }
   }
 
+  Future<void> addEntry(Entry entry) async {
+    await entries.doc(entry.id).set(entry.toJson());
+  }
+
   Future<void> updateEntry(Entry entry) async {
     await entries.doc(entry.id).update(entry.toJson());
+  }
+
+  Future<void> deleteEntry(String id) async {
+    await entries.doc(id).delete();
   }
 }

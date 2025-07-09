@@ -77,7 +77,7 @@ class IndexManager {
     searchController.clear();
   }
 
-  void createEntry(String headword) {
+  Future<void> createEntry(String headword) async {
     final now = DateTime.now();
     final id = Entry.getValidFirestoreId(headword);
 
@@ -95,6 +95,9 @@ class IndexManager {
 
     // Reset the filter to latest to show the new entry
     filter = IndexFilter.latest;
+
+    // Save to database
+    await _db.addEntry(entry);
   }
 
   Future<void> updateEntry(Entry entry) async {
@@ -109,9 +112,11 @@ class IndexManager {
   }
 
   Future<void> deleteEntry(String id) async {
-    // await FirebaseFirestore.instance.collection('entries').doc(id).delete();
     _allEntries.removeWhere((entry) => entry.id == id);
     gridEntries.value = getFilteredEntries();
+
+    // Delete from database
+    await _db.deleteEntry(id);
   }
 
   List<Entry> getFilteredEntries() {

@@ -48,18 +48,33 @@ class NewCard extends StatelessWidget {
     );
   }
 
-  void _addNewEntry(BuildContext context) {
+  Future<void> _addNewEntry(BuildContext context) async {
     final manager = get<IndexManager>();
 
-    // Create a new entry with the headword
-    manager.createEntry(headword);
+    try {
+      // Create a new entry with the headword
+      await manager.createEntry(headword);
 
-    // Show a snackbar to indicate success
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.tr.entryAddedToLexicon(headword)),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+      // Show a snackbar to indicate success
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.tr.entryAddedToLexicon(headword)),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      // Show error snackbar if something goes wrong
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.tr.errorAddingEntry),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
   }
 }

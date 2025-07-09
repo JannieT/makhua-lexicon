@@ -232,5 +232,9 @@
   "errorUpdatingEntry": "Error updating entry",
   "@errorUpdatingEntry": {
     "description": "Message shown when an error occurs while updating an entry"
+  },
+  "errorAddingEntry": "Error adding entry",
+  "@errorAddingEntry": {
+    "description": "Message shown when an error occurs while adding an entry"
   }
 }
