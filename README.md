@@ -1,15 +1,9 @@
-# <Project Name Goes Here>
+# Makhua Shirima Lexicon
 
 ## Setup
 
 For setting up the Dart SDK and Flutter, see the
 [official documentation](https://flutter.io/)
-
-Setup git hooks for commit message linting:
-
-```
-make setup-hooks
-```
 
 To set up Firebase, run the following using your specific bundle id:
 
@@ -76,7 +70,8 @@ For more detail on formatting localized dates, numbers and plurals see [the docs
 
 ## Roadmap
 
-- hosting, ci/cd
+- web: hosting, ci/cd
+- export MVP
 - add translations
 - offline caching/sync
 
