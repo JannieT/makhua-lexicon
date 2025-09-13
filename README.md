@@ -36,6 +36,13 @@ Update the release version number in pubspec.yaml, for example:
 version: 0.2.2+5
 ```
 
+web deploy:
+
+```
+flutter build web
+firebase deploy
+```
+
 ### App localisation
 
 To add a new language, say Spanish:
@@ -70,7 +77,6 @@ For more detail on formatting localized dates, numbers and plurals see [the docs
 
 ## Roadmap
 
-- web: hosting, ci/cd
 - export MVP
 - add translations
 - offline caching/sync

@@ -46,3 +46,4 @@ app.*.map.json
 
 # Project specific
 lib/src/localization/app_localizations*.dart
+.firebase/
