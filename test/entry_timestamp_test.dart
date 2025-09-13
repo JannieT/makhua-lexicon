@@ -16,7 +16,6 @@ void main() {
         'updated_at': timestamp,
         'updated_by': 'test@example.com',
         'example_sentence': 'test sentence',
-        'part_of_speech': 'noun',
         'flags': [1, 2],
       };
 
@@ -29,7 +28,6 @@ void main() {
       expect(entry.updatedAt, equals(now));
       expect(entry.updatedBy, equals('test@example.com'));
       expect(entry.exampleSentence, equals('test sentence'));
-      expect(entry.partOfSpeech, equals('noun'));
       expect(entry.flags, equals([1, 2]));
     });
 
@@ -101,7 +99,6 @@ void main() {
         updatedAt: now,
         updatedBy: 'test@example.com',
         exampleSentence: 'test sentence',
-        partOfSpeech: 'noun',
         flags: [1, 2],
       );
 
@@ -114,7 +111,6 @@ void main() {
       expect(json['updated_at'], isA<Timestamp>());
       expect(json['updated_by'], equals('test@example.com'));
       expect(json['example_sentence'], equals('test sentence'));
-      expect(json['part_of_speech'], equals('noun'));
       expect(json['flags'], equals([1, 2]));
 
       // Verify timestamp conversion

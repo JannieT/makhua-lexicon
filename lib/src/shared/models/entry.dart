@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Entry {
   final String id;
   final String headword;
-  final String? partOfSpeech;
   final String definition;
   final String? exampleSentence;
   final List<int> flags;
@@ -18,7 +17,6 @@ class Entry {
     required this.createdAt,
     required this.updatedAt,
     this.exampleSentence,
-    this.partOfSpeech,
     this.flags = const [],
     required this.updatedBy,
   });
@@ -32,7 +30,6 @@ class Entry {
       updatedAt: _parseTimestamp(data['updated_at']),
       updatedBy: data['updated_by'],
       exampleSentence: data['example_sentence'],
-      partOfSpeech: data['part_of_speech'],
       flags: _parseFlags(data['flags']),
     );
   }
@@ -76,7 +73,6 @@ class Entry {
       'updated_at': Timestamp.fromDate(updatedAt),
       'updated_by': updatedBy,
       'example_sentence': exampleSentence,
-      'part_of_speech': partOfSpeech,
       'flags': flags,
     };
   }

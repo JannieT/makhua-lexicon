@@ -6,7 +6,6 @@ import 'package:signals/signals_flutter.dart';
 import '../shared/extensions.dart';
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
-import '../shared/models/parts_of_speech.dart';
 import '../shared/services/service_locator.dart';
 import '../shared/services/store_service.dart';
 import '../shared/widgets/not_found.dart';
@@ -28,7 +27,6 @@ class _EntryScreenState extends State<EntryScreen> {
   Entry? _entry;
   final _isDirty = signal<bool>(false);
   final _selectedFlags = signal<List<Flag>>([]);
-  final _selectedPartOfSpeech = signal<PartOfSpeech?>(null);
 
   @override
   Widget build(BuildContext context) {
@@ -103,41 +101,6 @@ class _EntryScreenState extends State<EntryScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Watch((_) {
-                    return DropdownButtonFormField<PartOfSpeech?>(
-                      initialValue: _selectedPartOfSpeech.value,
-                      decoration: InputDecoration(
-                        labelText: context.tr.partOfSpeech,
-                        border: const OutlineInputBorder(),
-                      ),
-                      items: [
-                        DropdownMenuItem<PartOfSpeech?>(
-                          value: null,
-                          child: Text(context.tr.none),
-                        ),
-                        ...PartOfSpeech.values.map((pos) {
-                          return DropdownMenuItem(
-                            value: pos,
-                            child: Text(switch (pos) {
-                              PartOfSpeech.noun => context.tr.noun,
-                              PartOfSpeech.verb => context.tr.verb,
-                              PartOfSpeech.adjective => context.tr.adjective,
-                              PartOfSpeech.adverb => context.tr.adverb,
-                              PartOfSpeech.pronoun => context.tr.pronoun,
-                              PartOfSpeech.preposition => context.tr.preposition,
-                              PartOfSpeech.conjunction => context.tr.conjunction,
-                              PartOfSpeech.interjection => context.tr.interjection,
-                            }),
-                          );
-                        }),
-                      ],
-                      onChanged: (value) {
-                        _selectedPartOfSpeech.value = value;
-                        _isDirty.value = true;
-                      },
-                    );
-                  }),
-                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _exampleSentenceController,
                     decoration: InputDecoration(
@@ -158,7 +121,6 @@ class _EntryScreenState extends State<EntryScreen> {
   void _onTextChanged() {
     _isDirty.value =
         _definitionController.text != _entry?.definition ||
-        _selectedPartOfSpeech.value?.name != _entry?.partOfSpeech ||
         _exampleSentenceController.text != _entry?.exampleSentence ||
         _selectedFlags.value.map((f) => f.number).toList() != _entry?.flags;
   }
@@ -173,7 +135,6 @@ class _EntryScreenState extends State<EntryScreen> {
       id: entry.id,
       headword: entry.headword,
       definition: _definitionController.text,
-      partOfSpeech: _selectedPartOfSpeech.value?.name,
       exampleSentence: _exampleSentenceController.text,
       flags: _selectedFlags.value.map((f) => f.number).toList(),
       createdAt: entry.createdAt,
@@ -251,12 +212,6 @@ class _EntryScreenState extends State<EntryScreen> {
     _definitionController = TextEditingController(text: _entry?.definition);
     _exampleSentenceController = TextEditingController(text: _entry?.exampleSentence);
     _selectedFlags.value = _entry?.flags.map((n) => Flag.fromNumber(n)).toList() ?? [];
-    _selectedPartOfSpeech.value = _entry?.partOfSpeech != null
-        ? PartOfSpeech.values.firstWhere(
-            (pos) => pos.name == _entry?.partOfSpeech,
-            orElse: () => PartOfSpeech.noun,
-          )
-        : null;
 
     // Listen to changes in the text controllers
     _definitionController.addListener(_onTextChanged);
