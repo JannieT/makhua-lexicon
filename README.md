@@ -76,7 +76,6 @@ For more detail on formatting localized dates, numbers and plurals see [the docs
 
 ## Roadmap
 
-- remove parts of speech
 - hosting, ci/cd
 - add translations
 - offline caching/sync
