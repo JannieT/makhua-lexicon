@@ -105,7 +105,7 @@ class _EntryScreenState extends State<EntryScreen> {
                   const SizedBox(height: 16),
                   Watch((_) {
                     return DropdownButtonFormField<PartOfSpeech?>(
-                      value: _selectedPartOfSpeech.value,
+                      initialValue: _selectedPartOfSpeech.value,
                       decoration: InputDecoration(
                         labelText: context.tr.partOfSpeech,
                         border: const OutlineInputBorder(),

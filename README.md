@@ -15,7 +15,7 @@ To set up Firebase, run the following using your specific bundle id:
 
 ```
 firebase login
-flutterfire configure -i your.ios.bundle-id.here -a your.android.package.name.here
+flutterfire configure -i your.ios.bundle-id.here -a net.kiekies.makhua_lexicon
 ```
 
 Or log in to the project firebase console and download the firebase config files for
@@ -41,15 +41,6 @@ Update the release version number in pubspec.yaml, for example:
 ```
 version: 0.2.2+5
 ```
-
-Update the changelog with:
-
-```
-npx standard-version -- --release-as 8.4.5
-```
-
-The version should be tagged and shared as soon as a build is submitted for public
-release.
 
 ### App localisation
 
@@ -82,5 +73,14 @@ takes a parameter could be specified as follows:
 ```
 
 For more detail on formatting localized dates, numbers and plurals see [the docs][3]
+
+## Roadmap
+
+- remove parts of speech
+- hosting, ci/cd
+- add translations
+- offline caching/sync
+
+
 
 [3]: https://ishort.ink/owwv
