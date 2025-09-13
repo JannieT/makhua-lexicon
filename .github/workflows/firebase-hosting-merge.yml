@@ -18,3 +18,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MAKHUA_LEXICON }}'
           channelId: live
           projectId: makhua-lexicon
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
