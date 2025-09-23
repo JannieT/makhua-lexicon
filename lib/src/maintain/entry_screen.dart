@@ -8,6 +8,7 @@ import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
 import '../shared/services/service_locator.dart';
 import '../shared/services/store_service.dart';
+import '../shared/widgets/environment_label.dart';
 import '../shared/widgets/not_found.dart';
 import 'flag_button.dart';
 import 'index_manager.dart';
@@ -37,7 +38,10 @@ class _EntryScreenState extends State<EntryScreen> {
     final entry = _entry!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(entry.headword),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [Text(entry.headword), SizedBox(width: 8), const EnvironmentLabel()],
+        ),
         actions: [
           Watch((_) {
             if (!_isDirty.value) return const SizedBox.shrink();

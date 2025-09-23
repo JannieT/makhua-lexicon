@@ -196,5 +196,13 @@
   "errorAddingEntry": "Error adding entry",
   "@errorAddingEntry": {
     "description": "Message shown when an error occurs while adding an entry"
+  },
+  "stagingEnvironment": "STAGING",
+  "@stagingEnvironment": {
+    "description": "Label shown in the app bar when using staging database"
+  },
+  "productionEnvironment": "PRODUCTION",
+  "@productionEnvironment": {
+    "description": "Label shown in the app bar when using production database"
   }
 }

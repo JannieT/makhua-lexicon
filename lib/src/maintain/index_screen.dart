@@ -6,6 +6,7 @@ import '../settings/settings_screen.dart';
 import '../shared/extensions.dart';
 import '../shared/services/service_locator.dart';
 import '../shared/services/store_service.dart';
+import '../shared/widgets/environment_label.dart';
 import 'filter_bar.dart';
 import 'index_grid.dart';
 
@@ -19,7 +20,14 @@ class IndexScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.tr.appTitle),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(context.tr.appTitle),
+            SizedBox(width: 8),
+            const EnvironmentLabel(),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),

@@ -1,13 +1,19 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
+import '../../qa/config.dart';
 import '../models/entry.dart';
 
 class DatabaseService {
   late FirebaseFirestore _db;
   DatabaseService() {
-    _db = FirebaseFirestore.instance;
+    _db = FirebaseFirestore.instanceFor(
+      app: Firebase.app(),
+      databaseId: Config.database.name,
+    );
+    log('DatabaseService initialized with database: ${Config.database.name}');
   }
 
   FirebaseFirestore get db => _db;

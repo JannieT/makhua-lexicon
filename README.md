@@ -36,6 +36,8 @@ Update the release version number in pubspec.yaml, for example:
 version: 0.2.2+5
 ```
 
+set the database to production in `lib/src/qa/config.dart`
+
 web deploy:
 
 ```
@@ -77,8 +79,8 @@ For more detail on formatting localized dates, numbers and plurals see [the docs
 
 ## Roadmap
 
-- export MVP
 - add translations
+- export MVP
 - offline caching/sync
 
 
