@@ -245,23 +245,17 @@
   "@englishDescription": {
     "description": "Label for English translation description"
   },
-  "updatedBy": "Updated by {user}",
-  "@updatedBy": {
-    "description": "Shows who last updated the entry",
-    "placeholders": {
-      "user": {
-        "type": "String",
-        "example": "john@example.com"
-      }
-    }
-  },
-  "lastUpdated": "Last updated {time}",
+  "lastUpdated": "Updated {time} by {user}",
   "@lastUpdated": {
-    "description": "Shows when the entry was last updated",
+    "description": "Shows who last updated the entry",
     "placeholders": {
       "time": {
         "type": "String",
         "example": "2 hours ago"
+      },
+      "user": {
+        "type": "String",
+        "example": "john@example.com"
       }
     }
   }

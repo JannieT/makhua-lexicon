@@ -132,7 +132,6 @@ class Entry {
   Entry copyWith({
     String? id,
     List<int>? flags,
-    String? notes,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? updatedBy,

@@ -154,8 +154,7 @@ class EntryManager {
     try {
       _errorSignal.value = null;
 
-      final entry = _entry.value!;
-      final updatedEntry = entry.copyWith(
+      final updatedEntry = _entry.value!.copyWith(
         definition: _definitionController.text,
         exampleSentence: _exampleSentenceController.text,
         inflections: _inflections.value.isEmpty ? null : _inflections.value.join(','),
@@ -182,6 +181,11 @@ class EntryManager {
 
       await _indexManager.updateEntry(updatedEntry);
       _isDirty.value = false;
+
+      // Allow any reactive updates to complete before assigning
+      await Future.delayed(Duration.zero);
+
+      _entry.value = updatedEntry;
       return true;
     } catch (e) {
       log('Error updating entry: $e');

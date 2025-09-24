@@ -157,7 +157,9 @@ class _EntryScreenState extends State<EntryScreen> {
                     const SizedBox(height: 32),
 
                     // Metadata section
-                    EntryMetadata(entry: entry),
+                    Watch((_) {
+                      return EntryMetadata(entry: _manager.entry!);
+                    }),
 
                     // generous bottom spacing
                     const SizedBox(height: 100),
