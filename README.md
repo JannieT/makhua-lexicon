@@ -79,7 +79,6 @@ For more detail on formatting localized dates, numbers and plurals see [the docs
 
 ## Roadmap
 
-- improve flags
 - export MVP
 - search
 - discussions
