@@ -157,22 +157,14 @@ class EntryManager {
       final updatedEntry = _entry.value!.copyWith(
         definition: _definitionController.text,
         exampleSentence: _exampleSentenceController.text,
-        inflections: _inflections.value.isEmpty ? null : _inflections.value.join(','),
+        inflections: _inflections.value.join(','),
         portugueseTranslation: Translation(
-          headwords: _portugueseHeadwords.value.isEmpty
-              ? null
-              : _portugueseHeadwords.value.join(','),
-          description: _portugueseDescriptionController.text.isEmpty
-              ? null
-              : _portugueseDescriptionController.text,
+          headwords: _portugueseHeadwords.value.join(','),
+          description: _portugueseDescriptionController.text,
         ),
         englishTranslation: Translation(
-          headwords: _englishHeadwords.value.isEmpty
-              ? null
-              : _englishHeadwords.value.join(','),
-          description: _englishDescriptionController.text.isEmpty
-              ? null
-              : _englishDescriptionController.text,
+          headwords: _englishHeadwords.value.join(','),
+          description: _englishDescriptionController.text,
         ),
         flags: _selectedFlags.value.map((f) => f.number).toList(),
         updatedAt: DateTime.now(),
