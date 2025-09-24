@@ -8,6 +8,7 @@ import '../shared/widgets/environment_label.dart';
 import '../shared/widgets/flag_button.dart';
 import '../shared/widgets/not_found.dart';
 import 'entry_manager.dart';
+import 'widgets/tag_editor.dart';
 
 class EntryScreen extends StatefulWidget {
   final String? _entryId;
@@ -99,6 +100,66 @@ class _EntryScreenState extends State<EntryScreen> {
                       ),
                       maxLines: 2,
                     ),
+                    const SizedBox(height: 16),
+                    Watch((_) {
+                      return TagEditor(
+                        initialValue: _manager.inflections.join(','),
+                        label: context.tr.inflections,
+                        hint: context.tr.inflectionsHint,
+                        onChanged: _manager.updateInflections,
+                      );
+                    }),
+                    const SizedBox(height: 24),
+
+                    // Portuguese Translation section
+                    Text(
+                      context.tr.portugueseTranslation,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _manager.portugueseDescriptionController,
+                      decoration: InputDecoration(
+                        labelText: context.tr.portugueseDescription,
+                        border: const OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 16),
+                    Watch((_) {
+                      return TagEditor(
+                        initialValue: _manager.portugueseHeadwords.join(','),
+                        label: context.tr.portugueseHeadwords,
+                        hint: context.tr.portugueseHeadwordsHint,
+                        onChanged: _manager.updatePortugueseHeadwords,
+                      );
+                    }),
+                    const SizedBox(height: 24),
+
+                    // English Translation section
+                    Text(
+                      context.tr.englishTranslation,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _manager.englishDescriptionController,
+                      decoration: InputDecoration(
+                        labelText: context.tr.englishDescription,
+                        border: const OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 16),
+                    Watch((_) {
+                      return TagEditor(
+                        initialValue: _manager.englishHeadwords.join(','),
+                        label: context.tr.englishHeadwords,
+                        hint: context.tr.englishHeadwordsHint,
+                        onChanged: _manager.updateEnglishHeadwords,
+                      );
+                    }),
+                    SizedBox(height: 100),
                   ],
                 ),
               ),

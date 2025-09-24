@@ -1,14 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'translation.dart';
+
 class Entry {
+  // metadata
   final String id;
-  final String headword;
-  final String definition;
-  final String? exampleSentence;
   final List<int> flags;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String updatedBy;
+
+  // makhua
+  final String headword;
+  final String? inflections;
+  final String definition;
+  final String? exampleSentence;
+
+  // translations
+  final Translation? portugueseTranslation;
+  final Translation? englishTranslation;
 
   Entry({
     required this.id,
@@ -19,19 +29,41 @@ class Entry {
     this.exampleSentence,
     this.flags = const [],
     required this.updatedBy,
+    this.inflections,
+    this.portugueseTranslation,
+    this.englishTranslation,
   });
 
   static Entry fromJson(Map<String, dynamic> data) {
     return Entry(
       id: data['id'],
       headword: data['headword'],
+      inflections: data['inflections'],
       definition: data['definition'],
       createdAt: _parseTimestamp(data['created_at']),
       updatedAt: _parseTimestamp(data['updated_at']),
       updatedBy: data['updated_by'],
       exampleSentence: data['example_sentence'],
       flags: _parseFlags(data['flags']),
+      portugueseTranslation: Translation.fromJson(data['portuguese_translation']),
+      englishTranslation: Translation.fromJson(data['english_translation']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'headword': headword,
+      'inflections': inflections,
+      'definition': definition,
+      'created_at': Timestamp.fromDate(createdAt),
+      'updated_at': Timestamp.fromDate(updatedAt),
+      'updated_by': updatedBy,
+      'example_sentence': exampleSentence,
+      'flags': flags,
+      'portuguese_translation': portugueseTranslation?.toJson(),
+      'english_translation': englishTranslation?.toJson(),
+    };
   }
 
   static DateTime _parseTimestamp(dynamic timestamp) {
@@ -64,19 +96,6 @@ class Entry {
     return [];
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'headword': headword,
-      'definition': definition,
-      'created_at': Timestamp.fromDate(createdAt),
-      'updated_at': Timestamp.fromDate(updatedAt),
-      'updated_by': updatedBy,
-      'example_sentence': exampleSentence,
-      'flags': flags,
-    };
-  }
-
   @override
   bool operator ==(Object other) {
     if (other is Entry) {
@@ -87,6 +106,57 @@ class Entry {
 
   @override
   int get hashCode => id.hashCode;
+
+  /// Parses a comma-separated string into a list of trimmed, non-empty strings
+  static List<String> parseCommaSeparatedString(String? value) {
+    if (value == null || value.isEmpty) return [];
+    return value
+        .split(',')
+        .map((tag) => tag.trim())
+        .where((tag) => tag.isNotEmpty)
+        .toList();
+  }
+
+  /// Gets inflections as a list of strings
+  List<String> get inflectionsList => parseCommaSeparatedString(inflections);
+
+  /// Gets portuguese headwords as a list of strings
+  List<String> get portugueseHeadwordsList =>
+      parseCommaSeparatedString(portugueseTranslation?.headwords);
+
+  /// Gets english headwords as a list of strings
+  List<String> get englishHeadwordsList =>
+      parseCommaSeparatedString(englishTranslation?.headwords);
+
+  /// Creates a copy of this Entry with the given fields replaced with new values.
+  Entry copyWith({
+    String? id,
+    List<int>? flags,
+    String? notes,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? updatedBy,
+    String? headword,
+    String? inflections,
+    String? definition,
+    String? exampleSentence,
+    Translation? portugueseTranslation,
+    Translation? englishTranslation,
+  }) {
+    return Entry(
+      id: id ?? this.id,
+      flags: flags ?? this.flags,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      updatedBy: updatedBy ?? this.updatedBy,
+      headword: headword ?? this.headword,
+      inflections: inflections ?? this.inflections,
+      definition: definition ?? this.definition,
+      exampleSentence: exampleSentence ?? this.exampleSentence,
+      portugueseTranslation: portugueseTranslation ?? this.portugueseTranslation,
+      englishTranslation: englishTranslation ?? this.englishTranslation,
+    );
+  }
 
   /// Transforms a string to a valid Firestore document ID.
   ///

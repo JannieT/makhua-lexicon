@@ -204,5 +204,45 @@
   "productionEnvironment": "PRODUCTION",
   "@productionEnvironment": {
     "description": "Label shown in the app bar when using production database"
+  },
+  "inflections": "Inflections",
+  "@inflections": {
+    "description": "Label for the inflections field"
+  },
+  "inflectionsHint": "Add inflections...",
+  "@inflectionsHint": {
+    "description": "Hint text for the inflections tag editor"
+  },
+  "portugueseTranslation": "Portuguese Translation",
+  "@portugueseTranslation": {
+    "description": "Label for the Portuguese translation section"
+  },
+  "portugueseHeadwords": "Portuguese Headwords",
+  "@portugueseHeadwords": {
+    "description": "Label for Portuguese translation headwords"
+  },
+  "portugueseHeadwordsHint": "Add Portuguese headwords...",
+  "@portugueseHeadwordsHint": {
+    "description": "Hint text for Portuguese headwords tag editor"
+  },
+  "portugueseDescription": "Description in Portuguese",
+  "@portugueseDescription": {
+    "description": "Label for Portuguese translation description"
+  },
+  "englishTranslation": "English Translation",
+  "@englishTranslation": {
+    "description": "Label for the English translation section"
+  },
+  "englishHeadwords": "English Headwords",
+  "@englishHeadwords": {
+    "description": "Label for English translation headwords"
+  },
+  "englishHeadwordsHint": "Add English headwords...",
+  "@englishHeadwordsHint": {
+    "description": "Hint text for English headwords tag editor"
+  },
+  "englishDescription": "Description in English",
+  "@englishDescription": {
+    "description": "Label for English translation description"
   }
 }

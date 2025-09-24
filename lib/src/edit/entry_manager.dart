@@ -6,6 +6,7 @@ import 'package:signals/signals.dart';
 import '../index/index_manager.dart';
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
+import '../shared/models/translation.dart';
 import '../shared/services/database_service.dart';
 import '../shared/services/service_locator.dart';
 import '../shared/services/store_service.dart';
@@ -23,6 +24,13 @@ class EntryManager {
   // Text controllers
   late final TextEditingController _definitionController;
   late final TextEditingController _exampleSentenceController;
+  late final TextEditingController _portugueseDescriptionController;
+  late final TextEditingController _englishDescriptionController;
+
+  // Tag editor state
+  final _inflections = signal<List<String>>([]);
+  final _portugueseHeadwords = signal<List<String>>([]);
+  final _englishHeadwords = signal<List<String>>([]);
 
   // Getters
   Entry? get entry => _entry.value;
@@ -31,19 +39,31 @@ class EntryManager {
   String? get error => _errorSignal.value;
   TextEditingController get definitionController => _definitionController;
   TextEditingController get exampleSentenceController => _exampleSentenceController;
+  TextEditingController get portugueseDescriptionController =>
+      _portugueseDescriptionController;
+  TextEditingController get englishDescriptionController => _englishDescriptionController;
+  List<String> get inflections => _inflections.value;
+  List<String> get portugueseHeadwords => _portugueseHeadwords.value;
+  List<String> get englishHeadwords => _englishHeadwords.value;
 
   EntryManager(this._storeService, this._indexManager) {
     _definitionController = TextEditingController();
     _exampleSentenceController = TextEditingController();
+    _portugueseDescriptionController = TextEditingController();
+    _englishDescriptionController = TextEditingController();
 
     // Listen to text changes to update dirty state
     _definitionController.addListener(_onTextChanged);
     _exampleSentenceController.addListener(_onTextChanged);
+    _portugueseDescriptionController.addListener(_onTextChanged);
+    _englishDescriptionController.addListener(_onTextChanged);
   }
 
   void dispose() {
     _definitionController.dispose();
     _exampleSentenceController.dispose();
+    _portugueseDescriptionController.dispose();
+    _englishDescriptionController.dispose();
   }
 
   /// Initialize the manager with an entry
@@ -68,6 +88,19 @@ class EntryManager {
       _definitionController.text = found.definition;
       _exampleSentenceController.text = found.exampleSentence ?? '';
       _selectedFlags.value = found.flags.map((n) => Flag.fromNumber(n)).toList();
+
+      // Initialize inflections from comma-separated string
+      _inflections.value = found.inflectionsList;
+
+      // Initialize Portuguese translation
+      _portugueseDescriptionController.text =
+          found.portugueseTranslation?.description ?? '';
+      _portugueseHeadwords.value = found.portugueseHeadwordsList;
+
+      // Initialize English translation
+      _englishDescriptionController.text = found.englishTranslation?.description ?? '';
+      _englishHeadwords.value = found.englishHeadwordsList;
+
       _isDirty.value = false;
     } catch (e) {
       log('Error fetching entry: $e');
@@ -96,6 +129,24 @@ class EntryManager {
     return _selectedFlags.value.contains(flag);
   }
 
+  /// Update inflections
+  void updateInflections(List<String> inflections) {
+    _inflections.value = inflections;
+    _isDirty.value = true;
+  }
+
+  /// Update Portuguese headwords
+  void updatePortugueseHeadwords(List<String> headwords) {
+    _portugueseHeadwords.value = headwords;
+    _isDirty.value = true;
+  }
+
+  /// Update English headwords
+  void updateEnglishHeadwords(List<String> headwords) {
+    _englishHeadwords.value = headwords;
+    _isDirty.value = true;
+  }
+
   /// Save the current entry
   Future<bool> saveEntry() async {
     if (_entry.value == null) return false;
@@ -107,6 +158,23 @@ class EntryManager {
       final updatedEntry = entry.copyWith(
         definition: _definitionController.text,
         exampleSentence: _exampleSentenceController.text,
+        inflections: _inflections.value.isEmpty ? null : _inflections.value.join(','),
+        portugueseTranslation: Translation(
+          headwords: _portugueseHeadwords.value.isEmpty
+              ? null
+              : _portugueseHeadwords.value.join(','),
+          description: _portugueseDescriptionController.text.isEmpty
+              ? null
+              : _portugueseDescriptionController.text,
+        ),
+        englishTranslation: Translation(
+          headwords: _englishHeadwords.value.isEmpty
+              ? null
+              : _englishHeadwords.value.join(','),
+          description: _englishDescriptionController.text.isEmpty
+              ? null
+              : _englishDescriptionController.text,
+        ),
         flags: _selectedFlags.value.map((f) => f.number).toList(),
         updatedAt: DateTime.now(),
         updatedBy: _storeService.email ?? '',
@@ -153,9 +221,22 @@ class EntryManager {
   void _onTextChanged() {
     if (_entry.value == null) return;
 
+    final originalInflections = _entry.value!.inflectionsList;
+    final originalPortugueseHeadwords = _entry.value!.portugueseHeadwordsList;
+    final originalPortugueseDescription =
+        _entry.value!.portugueseTranslation?.description ?? '';
+    final originalEnglishHeadwords = _entry.value!.englishHeadwordsList;
+    final originalEnglishDescription =
+        _entry.value!.englishTranslation?.description ?? '';
+
     _isDirty.value =
         _definitionController.text != _entry.value!.definition ||
         _exampleSentenceController.text != (_entry.value!.exampleSentence ?? '') ||
+        _inflections.value != originalInflections ||
+        _portugueseDescriptionController.text != originalPortugueseDescription ||
+        _portugueseHeadwords.value != originalPortugueseHeadwords ||
+        _englishDescriptionController.text != originalEnglishDescription ||
+        _englishHeadwords.value != originalEnglishHeadwords ||
         _selectedFlags.value.map((f) => f.number).toList() != _entry.value!.flags;
   }
 }
