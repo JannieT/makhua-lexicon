@@ -26,7 +26,12 @@ class _EntryScreenState extends State<EntryScreen> {
   Widget build(BuildContext context) {
     return Watch((_) {
       if (_manager.entry == null) {
-        return const NotFound();
+        if (_manager.error == null) return const SizedBox.shrink();
+
+        return NotFound(
+          title: context.tr.entryNotFound,
+          description: context.tr.entryNotFoundDescription,
+        );
       }
 
       final entry = _manager.entry!;
