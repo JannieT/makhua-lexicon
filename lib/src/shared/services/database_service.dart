@@ -43,6 +43,23 @@ class DatabaseService {
     }
   }
 
+  Future<Entry?> getEntry(String id) async {
+    try {
+      final doc = await entries.doc(id).get();
+      if (!doc.exists) {
+        log('Entry with id $id not found');
+        return null;
+      }
+
+      final data = doc.data()!;
+      data['id'] = doc.id;
+      return Entry.fromJson(data);
+    } catch (e) {
+      log('Error fetching entry $id: $e');
+      rethrow;
+    }
+  }
+
   Future<void> addEntry(Entry entry) async {
     await entries.doc(entry.id).set(entry.toJson());
   }

@@ -161,14 +161,6 @@ class IndexManager {
     }
   }
 
-  Entry? getEntry(String? id) {
-    try {
-      return _allEntries.firstWhere((entry) => entry.id == id);
-    } catch (e) {
-      return null;
-    }
-  }
-
   void dispose() {
     searchController.dispose();
   }

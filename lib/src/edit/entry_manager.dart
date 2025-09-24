@@ -6,6 +6,8 @@ import 'package:signals/signals.dart';
 import '../index/index_manager.dart';
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
+import '../shared/services/database_service.dart';
+import '../shared/services/service_locator.dart';
 import '../shared/services/store_service.dart';
 
 class EntryManager {
@@ -45,19 +47,33 @@ class EntryManager {
   }
 
   /// Initialize the manager with an entry
-  void initializeEntry(String? entryId) {
-    final found = _indexManager.getEntry(entryId);
-    if (found == null) {
+  Future<void> initializeEntry(String? entryId) async {
+    if (entryId == null) {
       _entry.value = null;
       return;
     }
 
-    _entry.value = found;
-    _definitionController.text = found.definition;
-    _exampleSentenceController.text = found.exampleSentence ?? '';
-    _selectedFlags.value = found.flags.map((n) => Flag.fromNumber(n)).toList();
-    _isDirty.value = false;
-    _errorSignal.value = null;
+    try {
+      _errorSignal.value = null;
+      final databaseService = get<DatabaseService>();
+      final found = await databaseService.getEntry(entryId);
+
+      if (found == null) {
+        _entry.value = null;
+        _errorSignal.value = 'Entry not found';
+        return;
+      }
+
+      _entry.value = found;
+      _definitionController.text = found.definition;
+      _exampleSentenceController.text = found.exampleSentence ?? '';
+      _selectedFlags.value = found.flags.map((n) => Flag.fromNumber(n)).toList();
+      _isDirty.value = false;
+    } catch (e) {
+      log('Error fetching entry: $e');
+      _errorSignal.value = 'Failed to load entry: $e';
+      _entry.value = null;
+    }
   }
 
   /// Toggle a flag selection

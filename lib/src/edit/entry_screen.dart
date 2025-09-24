@@ -162,11 +162,15 @@ class _EntryScreenState extends State<EntryScreen> {
     );
   }
 
+  Future<void> _initializeEntry() async {
+    await _manager.initializeEntry(widget._entryId);
+  }
+
   @override
   void initState() {
     super.initState();
     _manager = get<EntryManager>();
-    _manager.initializeEntry(widget._entryId);
+    _initializeEntry();
   }
 
   @override
