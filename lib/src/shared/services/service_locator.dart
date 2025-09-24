@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import '../../edit/entry_manager.dart';
 import '../../index/index_manager.dart';
 import '../../settings/settings_manager.dart';
 import '../../settings/settings_service.dart';
@@ -21,4 +22,5 @@ Future<void> registerServices() async {
       manager.dispose();
     },
   );
+  get.registerFactory<EntryManager>(() => EntryManager(store, get<IndexManager>()));
 }
