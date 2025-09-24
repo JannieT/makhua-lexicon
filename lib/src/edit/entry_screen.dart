@@ -8,6 +8,7 @@ import '../shared/widgets/environment_label.dart';
 import '../shared/widgets/flag_button.dart';
 import '../shared/widgets/not_found.dart';
 import 'entry_manager.dart';
+import 'widgets/entry_metadata.dart';
 import 'widgets/tag_editor.dart';
 
 class EntryScreen extends StatefulWidget {
@@ -65,27 +66,6 @@ class _EntryScreenState extends State<EntryScreen> {
                   children: [
                     const SizedBox(height: 24),
 
-                    // Flags section
-                    Text(
-                      context.tr.flags,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: Flag.values.map((flag) {
-                        return Watch((_) {
-                          final isSelected = _manager.isFlagSelected(flag);
-                          return FlagButton(
-                            flag: flag,
-                            isSelected: isSelected,
-                            onTap: (flag) => _manager.toggleFlag(flag),
-                          );
-                        });
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 24),
-
                     // Editable fields
                     TextFormField(
                       controller: _manager.definitionController,
@@ -114,7 +94,7 @@ class _EntryScreenState extends State<EntryScreen> {
                         onChanged: _manager.updateInflections,
                       );
                     }),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 50),
 
                     // Portuguese Translation section
                     Text(
@@ -139,7 +119,7 @@ class _EntryScreenState extends State<EntryScreen> {
                         onChanged: _manager.updatePortugueseHeadwords,
                       );
                     }),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 50),
 
                     // English Translation section
                     Text(
@@ -164,12 +144,48 @@ class _EntryScreenState extends State<EntryScreen> {
                         onChanged: _manager.updateEnglishHeadwords,
                       );
                     }),
-                    SizedBox(height: 100),
+                    SizedBox(height: 50),
+
+                    // Flags section
+                    Text(
+                      context.tr.flags,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    ...Flag.values.map(_buildFlagButton),
+
+                    const SizedBox(height: 32),
+
+                    // Metadata section
+                    EntryMetadata(entry: entry),
+
+                    // generous bottom spacing
+                    const SizedBox(height: 100),
                   ],
                 ),
               ),
             ),
           ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildFlagButton(Flag flag) {
+    return Watch((_) {
+      final isSelected = _manager.isFlagSelected(flag);
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            FlagButton(
+              flag: flag,
+              isSelected: isSelected,
+              onTap: (flag) => _manager.toggleFlag(flag),
+            ),
+            const SizedBox(width: 8),
+            Text(flag.label),
+          ],
         ),
       );
     });

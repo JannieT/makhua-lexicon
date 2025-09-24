@@ -42,7 +42,7 @@ class IndexCard extends StatelessWidget {
               const Spacer(),
               // Updated at
               Text(
-                context.tr.updatedAt(_formatDate(context, entry.updatedAt)),
+                context.tr.updatedAt(entry.updatedAt.toRelativeTimeString(context)),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -52,31 +52,5 @@ class IndexCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(BuildContext context, DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-
-    if (difference.inDays == 0) {
-      if (difference.inHours == 0) {
-        return context.tr.timeAgoMinutes(difference.inMinutes);
-      }
-      return context.tr.timeAgoHours(difference.inHours);
-    }
-
-    if (difference.inDays < 7) {
-      return context.tr.timeAgoDays(difference.inDays);
-    }
-
-    if (difference.inDays < 30) {
-      return context.tr.timeAgoWeeks(difference.inDays ~/ 7);
-    }
-
-    if (difference.inDays < 365) {
-      return context.tr.timeAgoMonths(difference.inDays ~/ 30);
-    }
-
-    return context.tr.timeAgoYears(difference.inDays ~/ 365);
   }
 }

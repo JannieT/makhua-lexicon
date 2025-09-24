@@ -32,10 +32,9 @@ extension ExtendBuildContext on BuildContext {
   String get location {
     final router = GoRouter.of(this);
     final RouteMatch lastMatch = router.routerDelegate.currentConfiguration.last;
-    final RouteMatchList matchList =
-        lastMatch is ImperativeRouteMatch
-            ? lastMatch.matches
-            : router.routerDelegate.currentConfiguration;
+    final RouteMatchList matchList = lastMatch is ImperativeRouteMatch
+        ? lastMatch.matches
+        : router.routerDelegate.currentConfiguration;
     return matchList.uri.toString();
   }
 }
@@ -55,9 +54,39 @@ extension MockableDateTime on DateTime {
   }
 }
 
+extension DateTimeFormatting on DateTime {
+  /// Formats a DateTime as a relative time string (e.g., "2 hours ago", "3 days ago")
+  String toRelativeTimeString(BuildContext context) {
+    final now = MockableDateTime.current;
+    final difference = now.difference(this);
+
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      return context.tr.timeAgoMinutes(difference.inMinutes);
+    } else if (difference.inHours < 24) {
+      return context.tr.timeAgoHours(difference.inHours);
+    } else if (difference.inDays < 7) {
+      return context.tr.timeAgoDays(difference.inDays);
+    } else if (difference.inDays < 30) {
+      final weeks = (difference.inDays / 7).floor();
+      return context.tr.timeAgoWeeks(weeks);
+    } else if (difference.inDays < 365) {
+      final months = (difference.inDays / 30).floor();
+      return context.tr.timeAgoMonths(months);
+    } else {
+      final years = (difference.inDays / 365).floor();
+      return context.tr.timeAgoYears(years);
+    }
+  }
+}
+
 extension WidgetX on Widget {
   Widget px(double value) {
-    return Padding(padding: EdgeInsets.symmetric(horizontal: value), child: this);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: value),
+      child: this,
+    );
   }
 }
 
