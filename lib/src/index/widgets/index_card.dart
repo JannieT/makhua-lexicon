@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../shared/extensions.dart';
-import '../shared/models/entry.dart';
-import '../shared/models/flags.dart';
-import 'flag_button.dart';
+import '../../shared/extensions.dart';
+import '../../shared/models/entry.dart';
+import '../../shared/models/flags.dart';
+import '../../shared/widgets/flag_button.dart';
 
 class IndexCard extends StatelessWidget {
   const IndexCard(this.entry, {super.key});

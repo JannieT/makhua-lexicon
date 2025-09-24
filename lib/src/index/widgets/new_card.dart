@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../shared/extensions.dart';
-import '../shared/services/service_locator.dart';
-import 'index_manager.dart';
+import '../../shared/extensions.dart';
+import '../../shared/services/service_locator.dart';
+import '../index_manager.dart';
 
 class NewCard extends StatelessWidget {
   final String headword;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../shared/extensions.dart';
-import '../shared/models/flags.dart';
+import '../extensions.dart';
+import '../models/flags.dart';
 
 class FlagButton extends StatelessWidget {
   const FlagButton({super.key, required this.flag, this.isSelected = false, this.onTap});

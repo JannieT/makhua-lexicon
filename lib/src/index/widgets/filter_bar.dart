@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
-import '../shared/extensions.dart';
-import '../shared/models/flags.dart';
-import '../shared/services/service_locator.dart';
-import 'flag_button.dart';
-import 'index_manager.dart';
+import '../../shared/extensions.dart';
+import '../../shared/models/flags.dart';
+import '../../shared/services/service_locator.dart';
+import '../../shared/widgets/flag_button.dart';
+import '../index_manager.dart';
 
 class FilterBar extends StatelessWidget {
   const FilterBar({super.key});

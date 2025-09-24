@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../shared/extensions.dart';
+import '../../shared/extensions.dart';
 
 class LoadingCard extends StatelessWidget {
   const LoadingCard({super.key});

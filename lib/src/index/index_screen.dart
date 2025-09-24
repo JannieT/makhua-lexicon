@@ -7,8 +7,8 @@ import '../shared/extensions.dart';
 import '../shared/services/service_locator.dart';
 import '../shared/services/store_service.dart';
 import '../shared/widgets/environment_label.dart';
-import 'filter_bar.dart';
-import 'index_grid.dart';
+import 'widgets/filter_bar.dart';
+import 'widgets/index_grid.dart';
 
 /// Placeholder for home screen
 class IndexScreen extends StatelessWidget {

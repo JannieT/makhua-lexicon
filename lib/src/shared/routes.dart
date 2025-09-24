@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../maintain/entry_screen.dart';
-import '../maintain/index_screen.dart';
+import '../edit/entry_screen.dart';
+import '../index/index_screen.dart';
 import '../settings/settings_screen.dart';
 import '../users/auth_guard.dart';
 import '../users/signin_screen.dart';

@@ -3,15 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
+import '../index/index_manager.dart';
 import '../shared/extensions.dart';
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
 import '../shared/services/service_locator.dart';
 import '../shared/services/store_service.dart';
 import '../shared/widgets/environment_label.dart';
+import '../shared/widgets/flag_button.dart';
 import '../shared/widgets/not_found.dart';
-import 'flag_button.dart';
-import 'index_manager.dart';
 
 class EntryScreen extends StatefulWidget {
   final String? _entryId;
@@ -96,7 +96,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       labelText: context.tr.definition,
                       border: const OutlineInputBorder(),
                     ),
-                    maxLines: 3,
+                    maxLines: 4,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return context.tr.definitionRequired;

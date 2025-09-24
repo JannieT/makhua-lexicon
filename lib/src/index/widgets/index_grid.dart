@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
-import '../shared/extensions.dart';
-import '../shared/models/entry.dart';
-import '../shared/services/service_locator.dart';
+import '../../shared/extensions.dart';
+import '../../shared/models/entry.dart';
+import '../../shared/services/service_locator.dart';
+import '../index_manager.dart';
 import 'index_card.dart';
-import 'index_manager.dart';
 import 'loading_card.dart';
 import 'new_card.dart';
 

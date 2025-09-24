@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import '../../maintain/index_manager.dart';
+import '../../index/index_manager.dart';
 import '../../settings/settings_manager.dart';
 import '../../settings/settings_service.dart';
 import 'analytics_service.dart';
