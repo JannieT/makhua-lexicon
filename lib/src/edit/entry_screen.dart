@@ -41,7 +41,7 @@ class _EntryScreenState extends State<EntryScreen> {
           title: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(entry.headword),
+              Text(entry.headword, style: Theme.of(context).appBarTheme.titleTextStyle),
               SizedBox(width: 8),
               const EnvironmentLabel(),
             ],

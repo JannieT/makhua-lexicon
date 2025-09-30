@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../edit/entry_screen.dart';
+import '../export/export_screen.dart';
 import '../index/index_screen.dart';
 import '../settings/settings_screen.dart';
 import '../users/auth_guard.dart';
@@ -31,6 +32,12 @@ final GoRouter routes = GoRouter(
       path: SettingsView.routeName,
       builder: (BuildContext context, GoRouterState state) {
         return const SettingsView();
+      },
+    ),
+    GoRoute(
+      path: ExportScreen.routeName,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ExportScreen();
       },
     ),
     GoRoute(

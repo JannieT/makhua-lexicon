@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../export/export_screen.dart';
 import '../settings/settings_screen.dart';
 import '../shared/extensions.dart';
 import '../shared/services/service_locator.dart';
@@ -35,6 +37,14 @@ class IndexScreen extends StatelessWidget {
               await _signOut(context);
             },
           ),
+          // Only show export button on web platform
+          if (kIsWeb)
+            IconButton(
+              icon: const Icon(Icons.download),
+              onPressed: () {
+                context.push(ExportScreen.routeName);
+              },
+            ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {

@@ -258,5 +258,33 @@
         "example": "john@example.com"
       }
     }
+  },
+  "export": "Export",
+  "@export": {
+    "description": "Label for the export button"
+  },
+  "exportEntries": "Export Entries",
+  "@exportEntries": {
+    "description": "Title for the export screen"
+  },
+  "exportDescription": "Download all entries in CSV format",
+  "@exportDescription": {
+    "description": "Description text for the export screen"
+  },
+  "downloadCsv": "Download CSV",
+  "@downloadCsv": {
+    "description": "Label for the download CSV button"
+  },
+  "exporting": "Exporting...",
+  "@exporting": {
+    "description": "Loading text shown while exporting"
+  },
+  "exportSuccess": "Export completed successfully",
+  "@exportSuccess": {
+    "description": "Success message after export"
+  },
+  "exportError": "Error exporting entries",
+  "@exportError": {
+    "description": "Error message when export fails"
   }
 }

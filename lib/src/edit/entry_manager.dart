@@ -203,9 +203,9 @@ class EntryManager {
 
   /// Validate the current form data
   String? validateDefinition(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Definition is required';
-    }
+    // if (value == null || value.isEmpty) {
+    //   return 'Definition is required';
+    // }
     return null;
   }
 
