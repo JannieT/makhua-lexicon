@@ -31,12 +31,6 @@ class IndexScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await _signOut(context);
-            },
-          ),
           // Only show export button on web platform
           if (kIsWeb)
             IconButton(
@@ -45,12 +39,7 @@ class IndexScreen extends StatelessWidget {
                 context.push(ExportScreen.routeName);
               },
             ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              context.push(SettingsView.routeName);
-            },
-          ),
+          _UserMenuButton(),
         ],
       ),
       body: Padding(
@@ -64,6 +53,60 @@ class IndexScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _UserMenuButton extends StatelessWidget {
+  const _UserMenuButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      onSelected: (value) async {
+        switch (value) {
+          case 'preferences':
+            context.push(SettingsView.routeName);
+            break;
+          case 'logout':
+            await _signOut(context);
+            break;
+        }
+      },
+      itemBuilder: (BuildContext context) => [
+        const PopupMenuItem<String>(
+          value: 'preferences',
+          child: Row(
+            children: [Icon(Icons.settings), SizedBox(width: 8), Text('Preferences')],
+          ),
+        ),
+        const PopupMenuItem<String>(
+          value: 'logout',
+          child: Row(children: [Icon(Icons.logout), SizedBox(width: 8), Text('Logout')]),
+        ),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(_userLabel, style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(width: 4),
+            const Icon(Icons.arrow_drop_down),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String get _userLabel {
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email?.split('@').first;
+
+    if (email == null) return 'User';
+
+    return email.isNotEmpty
+        ? '${email[0].toUpperCase()}${email.substring(1).toLowerCase()}'
+        : 'User';
   }
 
   Future<void> _signOut(BuildContext context) async {
