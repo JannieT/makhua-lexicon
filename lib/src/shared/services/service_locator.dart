@@ -23,6 +23,6 @@ Future<void> registerServices() async {
       manager.dispose();
     },
   );
-  get.registerSingleton<ExportManager>(ExportManager(get<DatabaseService>()));
+  get.registerFactory<ExportManager>(() => ExportManager(get<DatabaseService>()));
   get.registerFactory<EntryManager>(() => EntryManager(store, get<IndexManager>()));
 }

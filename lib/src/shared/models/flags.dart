@@ -3,12 +3,12 @@ enum Flag {
   needsReviewOne(
     number: 2,
     color: 4286010961,
-    label: 'Needs Review One',
+    label: 'Por favor Geraldo, verifique',
   ), // context.colors.secondary
   needsReviewTwo(
     number: 3,
     color: 4282607667,
-    label: 'Needs Review Two',
+    label: 'Por favor Domingos, verifique',
   ); // context.colors.tertiary
 
   final int number;

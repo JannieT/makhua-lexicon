@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:signals/signals.dart';
-import 'package:web/web.dart' as web;
 
 import '../shared/models/entry.dart';
 import '../shared/services/database_service.dart';
+// Conditional imports to avoid web package on non-web platforms
+import 'download_stub.dart' if (dart.library.html) 'download_web.dart' as download;
 import 'export_service.dart';
 
 class ExportManager {
@@ -48,33 +49,12 @@ class ExportManager {
       final csvContent = ExportService.entriesToCsv(sortedEntries);
 
       // Trigger direct browser download
-      await _triggerBrowserDownload(csvContent);
+      await download.DownloadStub.triggerBrowserDownload(csvContent);
     } catch (e) {
       log('Error exporting entries: $e');
       _errorSignal.value = 'Failed to export entries: $e';
     } finally {
       _isExporting.value = false;
-    }
-  }
-
-  /// Trigger direct browser download (web only)
-  Future<void> _triggerBrowserDownload(String csvContent) async {
-    try {
-      final timestamp = DateTime.now().toIso8601String().split('T')[0];
-      final filename = 'makhua_lexicon_export_$timestamp.csv';
-
-      // Build data URL and trigger download
-      final dataUrl = 'data:text/csv;charset=utf-8,${Uri.encodeComponent(csvContent)}';
-
-      final anchor = web.HTMLAnchorElement()
-        ..href = dataUrl
-        ..download = filename;
-      anchor.click();
-
-      log('Browser download triggered for: $filename');
-    } catch (e) {
-      log('Error triggering browser download: $e');
-      rethrow;
     }
   }
 
