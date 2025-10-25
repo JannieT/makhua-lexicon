@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-enum Keys { themeMode, email, password }
+enum Keys { themeMode, email, password, language }
 
 class StoreService {
   StoreService._(this._box);
@@ -25,6 +25,12 @@ class StoreService {
 
   Future<void> putThemeMode(String mode) async {
     await _box.put(Keys.themeMode.name, mode);
+  }
+
+  String get language => _box.get(Keys.language.name, defaultValue: 'en');
+
+  Future<void> putLanguage(String language) async {
+    await _box.put(Keys.language.name, language);
   }
 
   // ------------------------------------

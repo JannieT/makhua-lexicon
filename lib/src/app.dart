@@ -17,7 +17,9 @@ class LexiconApp extends StatelessWidget {
     final theme = MaterialTheme(context);
 
     return Watch((_) {
-      final themeMode = get<SettingsManager>().themeMode;
+      final settings = get<SettingsManager>();
+      final themeMode = settings.themeMode;
+      final language = settings.language;
 
       return MaterialApp.router(
         // enable restoring the navigation stack
@@ -27,7 +29,9 @@ class LexiconApp extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: const [
           Locale('en'), // English, no country code
+          Locale('pt'), // Portuguese, no country code
         ],
+        locale: Locale(language),
 
         onGenerateTitle: (context) => context.tr.appTitle,
 

@@ -17,6 +17,9 @@ class SettingsManager {
   final _themeModeSignal = Signal<ThemeMode>(ThemeMode.system);
   ThemeMode get themeMode => _themeModeSignal.value;
 
+  final _languageSignal = Signal<String>('en');
+  String get language => _languageSignal.value;
+
   Future<void> updateThemeMode(ThemeMode? newThemeMode) async {
     if (newThemeMode == null) return;
     if (newThemeMode == _themeModeSignal.value) return;
@@ -27,7 +30,17 @@ class SettingsManager {
     await get<AnalyticsService>().logSetting('themeMode', newThemeMode.name);
   }
 
+  Future<void> updateLanguage(String newLanguage) async {
+    if (newLanguage == _languageSignal.value) return;
+
+    _languageSignal.value = newLanguage;
+
+    await _settingsService.updateLanguage(newLanguage);
+    await get<AnalyticsService>().logSetting('language', newLanguage);
+  }
+
   Future<void> loadSettings() async {
     _themeModeSignal.value = await _settingsService.themeMode();
+    _languageSignal.value = await _settingsService.language();
   }
 }

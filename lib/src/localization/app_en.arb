@@ -286,5 +286,17 @@
   "exportError": "Error exporting entries",
   "@exportError": {
     "description": "Error message when export fails"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Label for language selection"
+  },
+  "english": "English",
+  "@english": {
+    "description": "Label for English language option"
+  },
+  "portuguese": "Portuguese",
+  "@portuguese": {
+    "description": "Label for Portuguese language option"
   }
 }

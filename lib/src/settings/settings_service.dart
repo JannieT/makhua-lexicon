@@ -15,6 +15,13 @@ class SettingsService {
   }
 
   /// Persists the user's preferred ThemeMode to local or remote storage.
-  Future<void> updateThemeMode(ThemeMode theme) =>
-      _store.putThemeMode(theme.name);
+  Future<void> updateThemeMode(ThemeMode theme) => _store.putThemeMode(theme.name);
+
+  /// Loads the User's preferred language from local storage.
+  Future<String> language() async {
+    return _store.language;
+  }
+
+  /// Persists the user's preferred language to local storage.
+  Future<void> updateLanguage(String language) => _store.putLanguage(language);
 }

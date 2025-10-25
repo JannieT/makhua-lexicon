@@ -25,9 +25,7 @@ class IndexManager {
   final StoreService _store;
   final DatabaseService _db;
 
-  IndexManager(this._store, this._db) {
-    _loadEntries();
-  }
+  IndexManager(this._store, this._db);
 
   final _allEntries = <Entry>[];
   final gridEntries = signal<List<Entry>>(<Entry>[]);
@@ -75,14 +73,21 @@ class IndexManager {
     return !hasExactMatch;
   }
 
-  Future<void> _loadEntries() async {
+  Future<void> loadEntries() async {
     _isBusy.value = true;
-    // final fresh = await Future.delayed(const Duration(seconds: 2), () => mockEntries);
-    final fresh = await _db.getEntries();
-    _allEntries.clear();
-    _allEntries.addAll(fresh);
-    gridEntries.value = getFilteredEntries();
-    _isBusy.value = false;
+    try {
+      // final fresh = await Future.delayed(const Duration(seconds: 2), () => mockEntries);
+      final fresh = await _db.getEntries();
+      _allEntries.clear();
+      _allEntries.addAll(fresh);
+      gridEntries.value = getFilteredEntries();
+    } catch (e) {
+      // Handle error - entries will remain empty
+      _allEntries.clear();
+      gridEntries.value = [];
+    } finally {
+      _isBusy.value = false;
+    }
   }
 
   void resetSearch() {

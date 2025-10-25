@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -9,8 +10,15 @@ import 'index_card.dart';
 import 'loading_card.dart';
 import 'new_card.dart';
 
-class IndexGrid extends StatelessWidget {
+class IndexGrid extends StatefulWidget {
   const IndexGrid({super.key});
+
+  @override
+  State<IndexGrid> createState() => _IndexGridState();
+}
+
+class _IndexGridState extends State<IndexGrid> {
+  bool _hasLoaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +70,23 @@ class IndexGrid extends StatelessWidget {
     final found = entries.map((e) => IndexCard(e)).toList();
 
     return [...found, ...add];
+  }
+
+  Future<void> _loadEntriesIfAuthenticated() async {
+    // Wait for authentication to be ready
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    if (FirebaseAuth.instance.currentUser != null && !_hasLoaded) {
+      final manager = get<IndexManager>();
+      await manager.loadEntries();
+      _hasLoaded = true;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEntriesIfAuthenticated();
   }
 }
 

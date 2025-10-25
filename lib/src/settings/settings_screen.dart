@@ -17,28 +17,56 @@ class SettingsView extends StatelessWidget {
       appBar: AppBar(title: Text(context.tr.settings)),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        // Glue the SettingsManager to the theme selection DropdownButton.
-        child: Watch((_) {
-          final themeMode = get<SettingsManager>().themeMode;
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Theme Selection
+            Text(context.tr.systemTheme, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Watch((_) {
+              final themeMode = get<SettingsManager>().themeMode;
 
-          return DropdownButton<ThemeMode>(
-            // Read the selected themeMode from the manager
-            value: themeMode,
-            // Call the updateThemeMode method any time the user selects a theme.
-            onChanged: get<SettingsManager>().updateThemeMode,
-            items: [
-              DropdownMenuItem(
-                value: ThemeMode.system,
-                child: Text(context.tr.systemTheme),
-              ),
-              DropdownMenuItem(
-                value: ThemeMode.light,
-                child: Text(context.tr.lightTheme),
-              ),
-              DropdownMenuItem(value: ThemeMode.dark, child: Text(context.tr.darkTheme)),
-            ],
-          );
-        }),
+              return DropdownButton<ThemeMode>(
+                value: themeMode,
+                onChanged: get<SettingsManager>().updateThemeMode,
+                items: [
+                  DropdownMenuItem(
+                    value: ThemeMode.system,
+                    child: Text(context.tr.systemTheme),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.light,
+                    child: Text(context.tr.lightTheme),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.dark,
+                    child: Text(context.tr.darkTheme),
+                  ),
+                ],
+              );
+            }),
+            const SizedBox(height: 24),
+            // Language Selection
+            Text(context.tr.language, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Watch((_) {
+              final currentLanguage = get<SettingsManager>().language;
+
+              return DropdownButton<String>(
+                value: currentLanguage,
+                onChanged: (String? newLanguage) {
+                  if (newLanguage != null) {
+                    get<SettingsManager>().updateLanguage(newLanguage);
+                  }
+                },
+                items: [
+                  DropdownMenuItem(value: 'en', child: Text(context.tr.english)),
+                  DropdownMenuItem(value: 'pt', child: Text(context.tr.portuguese)),
+                ],
+              );
+            }),
+          ],
+        ),
       ),
     );
   }
