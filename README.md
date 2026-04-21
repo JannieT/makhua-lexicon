@@ -9,15 +9,7 @@ To set up Firebase, run the following using your specific bundle id:
 
 ```
 firebase login
-flutterfire configure -i your.ios.bundle-id.here -a net.kiekies.makhua_lexicon
-```
-
-Or log in to the project firebase console and download the firebase config files for
-Android and iOS. Put the two files here:
-
-```
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
+flutterfire configure -a net.kiekies.makhua_lexicon
 ```
 
 ## Test
@@ -26,6 +18,12 @@ To run all unit and widget tests:
 
 ```
 flutter test test/
+```
+
+## Develop
+
+```
+make dev
 ```
 
 ## Release
@@ -45,7 +43,12 @@ flutter build web
 firebase deploy
 ```
 
-### App localisation
+## Add a user
+
+Firebase Console → Authentication → Users tab → "Add user" button.
+You fill in an email + password and it creates the user instantly.
+
+## App localisation
 
 To add a new language, say Spanish:
 
