@@ -22,17 +22,19 @@ class IndexScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(context.tr.appTitle),
-            SizedBox(width: 8),
-            const EnvironmentLabel(),
-          ],
-        ),
+        title: context.isLargeWidth
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(context.tr.appTitle),
+                  SizedBox(width: 8),
+                  const EnvironmentLabel(),
+                ],
+              )
+            : SizedBox.shrink(),
         actions: [
           // Only show export button on web platform
-          if (kIsWeb)
+          if (kIsWeb && context.isLargeWidth)
             IconButton(
               icon: const Icon(Icons.download),
               onPressed: () {
@@ -43,7 +45,7 @@ class IndexScreen extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(28.0),
+        padding: EdgeInsets.all(context.isLargeWidth ? 28.0 : 12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

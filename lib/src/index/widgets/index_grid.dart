@@ -7,8 +7,15 @@ import '../../shared/models/entry.dart';
 import '../../shared/services/service_locator.dart';
 import '../index_manager.dart';
 import 'index_card.dart';
+import 'index_tile.dart';
 import 'loading_card.dart';
+import 'loading_tile.dart';
 import 'new_card.dart';
+import 'new_tile.dart';
+
+/// Width below which entries are rendered as a vertical list of tiles
+/// instead of a grid of cards.
+const _listBreakpoint = 600.0;
 
 class IndexGrid extends StatefulWidget {
   const IndexGrid({super.key});
@@ -30,44 +37,70 @@ class _IndexGridState extends State<IndexGrid> {
         return const EmptyWidget();
       }
 
-      final cards = _cardList(entries);
-
       return LayoutBuilder(
         builder: (context, constraints) {
-          // Calculate the number of columns based on screen width
           final width = constraints.maxWidth;
-          final crossAxisCount = switch (width) {
-            < 400 => 1,
-            < 600 => 2,
-            < 900 => 3,
-            < 1200 => 4,
-            _ => 4,
-          };
-
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              childAspectRatio: 1.5,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
-            itemCount: cards.length,
-            itemBuilder: (context, index) => cards[index],
-          );
+          if (width < _listBreakpoint) {
+            return _buildList(manager, entries);
+          }
+          return _buildGrid(manager, entries, width);
         },
       );
     });
   }
 
-  List<Widget> _cardList(List<Entry> entries) {
-    final manager = get<IndexManager>();
+  Widget _buildGrid(IndexManager manager, List<Entry> entries, double width) {
+    final crossAxisCount = switch (width) {
+      < 900 => 3,
+      < 1200 => 4,
+      _ => 4,
+    };
+    final cards = _cardList(manager, entries);
 
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        childAspectRatio: 1.5,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+      ),
+      itemCount: cards.length,
+      itemBuilder: (context, index) => cards[index],
+    );
+  }
+
+  Widget _buildList(IndexManager manager, List<Entry> entries) {
+    final tiles = _tileList(manager, entries);
+
+    return ListView.separated(
+      itemCount: tiles.length,
+      itemBuilder: (context, index) => tiles[index],
+      separatorBuilder: (_, _) => const Divider(height: 1),
+    );
+  }
+
+  List<Widget> _cardList(IndexManager manager, List<Entry> entries) {
     if (manager.isBusy) {
-      return List.generate(4, (index) => LoadingCard());
+      return List.generate(4, (index) => const LoadingCard());
     }
 
-    final add = manager.showAddCard ? [NewCard(manager.searchController.text)] : [];
-    final found = entries.map((e) => IndexCard(e)).toList();
+    final add = manager.showAddCard
+        ? <Widget>[NewCard(manager.searchController.text)]
+        : <Widget>[];
+    final found = entries.map<Widget>((e) => IndexCard(e)).toList();
+
+    return [...found, ...add];
+  }
+
+  List<Widget> _tileList(IndexManager manager, List<Entry> entries) {
+    if (manager.isBusy) {
+      return List.generate(6, (index) => const LoadingTile());
+    }
+
+    final add = manager.showAddCard
+        ? <Widget>[NewTile(manager.searchController.text)]
+        : <Widget>[];
+    final found = entries.map<Widget>((e) => IndexTile(e)).toList();
 
     return [...found, ...add];
   }
