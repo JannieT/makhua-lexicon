@@ -42,10 +42,10 @@ check: lint test ## Run linting and tests
 
 # Build
 build-web: ## Build Flutter web app for production
-	flutter build web --release --web-renderer canvaskit
+	flutter build web --release
 
 build-web-debug: ## Build Flutter web app for debugging
-	flutter build web --debug --web-renderer canvaskit
+	flutter build web --debug
 
 # Firebase Operations
 firebase-login: ## Login to Firebase CLI

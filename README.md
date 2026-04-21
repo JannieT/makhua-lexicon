@@ -36,10 +36,9 @@ version: 0.2.2+5
 
 set the database to production in `lib/src/qa/config.dart`
 
-web deploy:
+Build and deploy to web:
 
 ```
-flutter build web
 firebase deploy
 ```
 
