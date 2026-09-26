@@ -7,8 +7,10 @@ import '../index/index_screen.dart';
 import '../settings/settings_screen.dart';
 import '../users/auth_guard.dart';
 import '../users/signin_screen.dart';
+import 'services/auth_service.dart';
+import 'services/service_locator.dart';
 
-final authGuard = AuthGuard();
+final authGuard = AuthGuard(get<AuthService>());
 
 final GoRouter routes = GoRouter(
   redirect: (context, state) async => await authGuard.redirect(state),

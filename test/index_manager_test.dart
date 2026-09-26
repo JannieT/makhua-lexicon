@@ -4,7 +4,7 @@ import 'package:makhua_lexicon/src/shared/models/async_state.dart';
 import 'package:makhua_lexicon/src/shared/models/entry.dart';
 import 'package:makhua_lexicon/src/shared/services/database_service.dart';
 
-import 'doubles/store_double.dart';
+import 'doubles/fake_auth_service.dart';
 
 class FakeDatabaseService implements DatabaseService {
   List<Entry> stored = [];
@@ -34,20 +34,15 @@ Entry _entry(String headword) {
 }
 
 void main() {
-  late StoreDouble store;
   late FakeDatabaseService db;
   late IndexManager manager;
 
-  setUp(() async {
-    store = await StoreDouble.create(name: 'index_manager_test');
+  setUp(() {
     db = FakeDatabaseService();
-    manager = IndexManager(store, db);
+    manager = IndexManager(FakeAuthService(), db);
   });
 
-  tearDown(() async {
-    manager.dispose();
-    await store.cleanup();
-  });
+  tearDown(() => manager.dispose());
 
   test('load success exposes entries', () async {
     db.stored = [_entry('nyuwo')];

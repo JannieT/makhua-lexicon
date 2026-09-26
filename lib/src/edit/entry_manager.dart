@@ -8,12 +8,12 @@ import '../shared/models/async_state.dart';
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
 import '../shared/models/translation.dart';
+import '../shared/services/auth_service.dart';
 import '../shared/services/database_service.dart';
 import '../shared/services/service_locator.dart';
-import '../shared/services/store_service.dart';
 
 class EntryManager {
-  final StoreService _storeService;
+  final AuthService _authService;
   final IndexManager _indexManager;
 
   // State signals
@@ -54,7 +54,7 @@ class EntryManager {
   List<String> get portugueseHeadwords => _portugueseHeadwords.value;
   List<String> get englishHeadwords => _englishHeadwords.value;
 
-  EntryManager(this._storeService, this._indexManager) {
+  EntryManager(this._authService, this._indexManager) {
     _definitionController = TextEditingController();
     _exampleSentenceController = TextEditingController();
     _portugueseDescriptionController = TextEditingController();
@@ -174,7 +174,7 @@ class EntryManager {
         ),
         flags: _selectedFlags.value.map((f) => f.number).toList(),
         updatedAt: DateTime.now(),
-        updatedBy: _storeService.email ?? '',
+        updatedBy: _authService.email ?? '',
       );
 
       await _indexManager.updateEntry(updatedEntry);

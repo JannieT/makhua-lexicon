@@ -1,7 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-enum Keys { themeMode, email, password, language }
+enum Keys {
+  themeMode,
+  language,
+
+  // No longer written: sign-in credentials used to be persisted in plain text
+  email,
+  password,
+}
 
 class StoreService {
   StoreService._(this._box);
@@ -13,6 +20,7 @@ class StoreService {
 
     await Hive.initFlutter();
     Box box = await Hive.openBox('app');
+    await box.deleteAll([Keys.email.name, Keys.password.name]);
 
     _instance = StoreService._(box);
     return _instance!;
@@ -32,25 +40,6 @@ class StoreService {
   Future<void> putLanguage(String language) async {
     await _box.put(Keys.language.name, language);
   }
-
-  // ------------------------------------
-  // User Credentials
-  // ------------------------------------
-  String? get email => _box.get(Keys.email.name);
-
-  String? get password => _box.get(Keys.password.name);
-
-  Future<void> saveCredentials({required String email, required String password}) async {
-    await _box.put(Keys.email.name, email);
-    await _box.put(Keys.password.name, password);
-  }
-
-  Future<void> clearCredentials() async {
-    await _box.delete(Keys.email.name);
-    await _box.delete(Keys.password.name);
-  }
-
-  bool get hasCredentials => email != null && password != null;
 
   // ------------------------------------
   // Test abilities

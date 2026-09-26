@@ -1,6 +1,6 @@
 class Config {
   // set to production before release build:
-  static final database = DatabaseInstance.production;
+  static final database = DatabaseInstance.staging;
 }
 
 enum DatabaseInstance {

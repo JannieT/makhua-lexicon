@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,8 +6,8 @@ import '../export/export_screen.dart';
 import '../settings/settings_screen.dart';
 import '../shared/extensions.dart';
 import '../shared/services/service_locator.dart';
-import '../shared/services/store_service.dart';
 import '../shared/widgets/environment_label.dart';
+import '../users/auth_manager.dart';
 import 'widgets/filter_bar.dart';
 import 'widgets/index_grid.dart';
 
@@ -91,7 +90,10 @@ class _UserMenuButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(_userLabel, style: Theme.of(context).textTheme.bodyMedium),
+            Text(
+              get<AuthManager>().userLabel,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             const SizedBox(width: 4),
             const Icon(Icons.arrow_drop_down),
           ],
@@ -100,21 +102,8 @@ class _UserMenuButton extends StatelessWidget {
     );
   }
 
-  String get _userLabel {
-    final user = FirebaseAuth.instance.currentUser;
-    final email = user?.email?.split('@').first;
-
-    if (email == null) return 'User';
-
-    return email.isNotEmpty
-        ? '${email[0].toUpperCase()}${email.substring(1).toLowerCase()}'
-        : 'User';
-  }
-
   Future<void> _signOut(BuildContext context) async {
-    final store = get<StoreService>();
-    await store.clearCredentials();
-    await FirebaseAuth.instance.signOut();
+    await get<AuthManager>().signOut();
     if (!context.mounted) return;
     context.go('/signin');
   }

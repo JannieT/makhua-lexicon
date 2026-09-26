@@ -4,8 +4,8 @@ import 'package:signals/signals_flutter.dart';
 import '../shared/models/async_state.dart';
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
+import '../shared/services/auth_service.dart';
 import '../shared/services/database_service.dart';
-import '../shared/services/store_service.dart';
 
 enum IndexFilter {
   search,
@@ -23,10 +23,10 @@ enum IndexFilter {
 }
 
 class IndexManager {
-  final StoreService _store;
+  final AuthService _auth;
   final DatabaseService _db;
 
-  IndexManager(this._store, this._db);
+  IndexManager(this._auth, this._db);
 
   final _allEntries = <Entry>[];
   final gridEntries = signal<List<Entry>>(<Entry>[]);
@@ -110,7 +110,7 @@ class IndexManager {
       flags: [1], // default flag
       createdAt: now,
       updatedAt: now,
-      updatedBy: _store.email ?? '',
+      updatedBy: _auth.email ?? '',
     );
 
     _allEntries.add(entry);

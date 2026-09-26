@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../shared/extensions.dart';
 import '../../shared/models/async_state.dart';
 import '../../shared/models/entry.dart';
+import '../../shared/services/auth_service.dart';
 import '../../shared/services/service_locator.dart';
 import '../../shared/widgets/error_banner.dart';
 import '../index_manager.dart';
@@ -130,7 +130,7 @@ class _IndexGridState extends State<IndexGrid> {
     // Wait for authentication to be ready
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (FirebaseAuth.instance.currentUser != null && !_hasLoaded) {
+    if (get<AuthService>().isSignedIn && !_hasLoaded) {
       final manager = get<IndexManager>();
       await manager.loadEntries();
       _hasLoaded = true;

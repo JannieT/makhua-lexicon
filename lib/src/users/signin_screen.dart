@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../shared/extensions.dart';
+import '../shared/models/async_state.dart';
 import '../shared/services/service_locator.dart';
-import '../shared/services/store_service.dart';
+import '../shared/widgets/error_banner.dart';
+import 'auth_manager.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -16,8 +18,7 @@ class SigninScreen extends StatefulWidget {
 }
 
 class SigninScreenState extends State<SigninScreen> {
-  bool _isBusy = false;
-  String _errorMessage = '';
+  late final AuthManager _auth;
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _emailController;
@@ -71,20 +72,28 @@ class SigninScreenState extends State<SigninScreen> {
                     },
                   ),
                   const SizedBox(height: 30),
-                  SizedBox(
-                    width: 325,
-                    child: ElevatedButton(
-                      onPressed: _isBusy ? null : _login,
-                      child: Text(context.tr.loginLabel),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                    _errorMessage,
-                    style: context.styles.bodyMedium?.copyWith(
-                      color: context.colors.error,
-                    ),
-                  ),
+                  SignalBuilder(builder: (context) {
+                    final state = _auth.loginState;
+                    final loading = state is AppAsyncLoading<bool>;
+                    final error = switch (state) {
+                      AppAsyncFailure(:final message) => message,
+                      _ => null,
+                    };
+
+                    return Column(
+                      children: [
+                        SizedBox(
+                          width: 325,
+                          child: ElevatedButton(
+                            onPressed: loading ? null : _login,
+                            child: Text(context.tr.loginLabel),
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        if (error != null) ErrorBanner(message: error),
+                      ],
+                    );
+                  }),
                   const Spacer(),
                   const SizedBox(height: 150),
                 ],
@@ -96,68 +105,22 @@ class SigninScreenState extends State<SigninScreen> {
     );
   }
 
-  void _login() async {
+  Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isBusy = true;
-    });
+    final success = await _auth.login(_emailController.text, _passwordController.text);
+    if (!success || !mounted) return;
 
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      final store = get<StoreService>();
-      await store.saveCredentials(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      setState(() {
-        _errorMessage = '';
-        _isBusy = false;
-      });
-
-      if (!mounted) return;
-      context.go('/');
-    } on FirebaseAuthException catch (e) {
-      final feedback = switch (e.code) {
-        'user-not-found' => context.tr.userDoesntExistsWithGivenEmail,
-        'wrong-password' => context.tr.invalidEmailOrPassword,
-        'invalid-credential' => context.tr.invalidEmailOrPassword,
-        _ => context.tr.somethingWentWrongPleaseTryAgain,
-      };
-
-      setState(() {
-        _errorMessage = feedback;
-      });
-    }
-
-    setState(() {
-      _isBusy = false;
-    });
-  }
-
-  Future<void> _loadSavedCredentials() async {
-    final store = get<StoreService>();
-    if (store.hasCredentials) {
-      setState(() {
-        _emailController.text = store.email ?? '';
-        _passwordController.text = store.password ?? '';
-      });
-    }
+    context.go('/');
   }
 
   @override
   void initState() {
     super.initState();
-    _isBusy = false;
-    _errorMessage = '';
-    _emailController = TextEditingController()..clear();
-    _passwordController = TextEditingController()..clear();
-    _loadSavedCredentials();
+    _auth = get<AuthManager>();
+    _auth.resetLoginState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
   }
 
   @override
