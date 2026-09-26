@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:signals/signals.dart';
 
+import '../shared/models/async_state.dart';
 import '../shared/models/entry.dart';
 import '../shared/services/database_service.dart';
 // Conditional imports to avoid web package on non-web platforms
@@ -14,31 +15,27 @@ class ExportManager {
 
   ExportManager(this._databaseService);
 
-  // State signals
-  final _isExporting = signal<bool>(false);
-  final _errorSignal = signal<String?>(null);
+  final _exportState = Signal<AppAsyncState<bool>>(const AppAsyncIdle());
+  AppAsyncState<bool> get exportState => _exportState.value;
 
-  // Getters
-  bool get isExporting => _isExporting.value;
-  String? get error => _errorSignal.value;
-
-  /// Export all entries to CSV via direct browser download (web only)
-  Future<void> exportToCsv() async {
+  /// Export all entries to CSV via direct browser download (web only).
+  /// Returns whether the download was started.
+  Future<bool> exportToCsv() async {
     if (!kIsWeb) {
-      _errorSignal.value = 'Export is only available on web platform';
-      return;
+      _exportState.value = const AppAsyncFailure(
+        'Export is only available on web platform',
+      );
+      return false;
     }
 
+    _exportState.value = const AppAsyncLoading();
     try {
-      _isExporting.value = true;
-      _errorSignal.value = null;
-
       // Get all entries from database
       final entries = await _databaseService.getEntries();
 
       if (entries.isEmpty) {
-        _errorSignal.value = 'No entries found to export';
-        return;
+        _exportState.value = const AppAsyncFailure('No entries found to export');
+        return false;
       }
 
       // Sort entries by headword alphabetically
@@ -50,16 +47,12 @@ class ExportManager {
 
       // Trigger direct browser download
       await download.DownloadStub.triggerBrowserDownload(csvContent);
+      _exportState.value = const AppAsyncSuccess(true);
+      return true;
     } catch (e) {
       log('Error exporting entries: $e');
-      _errorSignal.value = 'Failed to export entries: $e';
-    } finally {
-      _isExporting.value = false;
+      _exportState.value = const AppAsyncFailure('Could not export entries');
+      return false;
     }
-  }
-
-  /// Clear any error state
-  void clearError() {
-    _errorSignal.value = null;
   }
 }

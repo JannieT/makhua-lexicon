@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals.dart';
 
 import '../index/index_manager.dart';
+import '../shared/models/async_state.dart';
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
 import '../shared/models/translation.dart';
@@ -16,10 +17,12 @@ class EntryManager {
   final IndexManager _indexManager;
 
   // State signals
-  final _entry = signal<Entry?>(null);
+  /// Success with a null entry means the entry does not exist.
+  final _entryState = Signal<AppAsyncState<Entry?>>(const AppAsyncIdle());
+  final _saveState = Signal<AppAsyncState<bool>>(const AppAsyncIdle());
+  final _deleteState = Signal<AppAsyncState<bool>>(const AppAsyncIdle());
   final _isDirty = signal<bool>(false);
   final _selectedFlags = signal<List<Flag>>([]);
-  final _errorSignal = signal<String?>(null);
 
   // Text controllers
   late final TextEditingController _definitionController;
@@ -33,10 +36,15 @@ class EntryManager {
   final _englishHeadwords = signal<List<String>>([]);
 
   // Getters
-  Entry? get entry => _entry.value;
+  AppAsyncState<Entry?> get entryState => _entryState.value;
+  AppAsyncState<bool> get saveState => _saveState.value;
+  AppAsyncState<bool> get deleteState => _deleteState.value;
+  Entry? get entry => switch (_entryState.value) {
+    AppAsyncSuccess(:final data) => data,
+    _ => null,
+  };
   bool get isDirty => _isDirty.value;
   List<Flag> get selectedFlags => _selectedFlags.value;
-  String? get error => _errorSignal.value;
   TextEditingController get definitionController => _definitionController;
   TextEditingController get exampleSentenceController => _exampleSentenceController;
   TextEditingController get portugueseDescriptionController =>
@@ -69,22 +77,20 @@ class EntryManager {
   /// Initialize the manager with an entry
   Future<void> initializeEntry(String? entryId) async {
     if (entryId == null) {
-      _entry.value = null;
+      _entryState.value = const AppAsyncIdle();
       return;
     }
 
+    _entryState.value = const AppAsyncLoading();
     try {
-      _errorSignal.value = null;
       final databaseService = get<DatabaseService>();
       final found = await databaseService.getEntry(entryId);
 
       if (found == null) {
-        _entry.value = null;
-        _errorSignal.value = 'Entry not found';
+        _entryState.value = const AppAsyncSuccess(null);
         return;
       }
 
-      _entry.value = found;
       _definitionController.text = found.definition;
       _exampleSentenceController.text = found.exampleSentence ?? '';
       _selectedFlags.value = found.flags.map((n) => Flag.fromNumber(n)).toList();
@@ -102,10 +108,10 @@ class EntryManager {
       _englishHeadwords.value = found.englishHeadwordsList;
 
       _isDirty.value = false;
+      _entryState.value = AppAsyncSuccess(found);
     } catch (e) {
       log('Error fetching entry: $e');
-      _errorSignal.value = 'Failed to load entry: $e';
-      _entry.value = null;
+      _entryState.value = const AppAsyncFailure('Could not load entry');
     }
   }
 
@@ -149,12 +155,12 @@ class EntryManager {
 
   /// Save the current entry
   Future<bool> saveEntry() async {
-    if (_entry.value == null) return false;
+    final current = entry;
+    if (current == null) return false;
 
+    _saveState.value = const AppAsyncLoading();
     try {
-      _errorSignal.value = null;
-
-      final updatedEntry = _entry.value!.copyWith(
+      final updatedEntry = current.copyWith(
         definition: _definitionController.text,
         exampleSentence: _exampleSentenceController.text,
         inflections: _inflections.value.join(','),
@@ -177,26 +183,29 @@ class EntryManager {
       // Allow any reactive updates to complete before assigning
       await Future.delayed(Duration.zero);
 
-      _entry.value = updatedEntry;
+      _entryState.value = AppAsyncSuccess(updatedEntry);
+      _saveState.value = const AppAsyncSuccess(true);
       return true;
     } catch (e) {
       log('Error updating entry: $e');
-      _errorSignal.value = 'Failed to save entry: $e';
+      _saveState.value = const AppAsyncFailure('Could not save entry');
       return false;
     }
   }
 
   /// Delete the current entry
   Future<bool> deleteEntry() async {
-    if (_entry.value == null) return false;
+    final current = entry;
+    if (current == null) return false;
 
+    _deleteState.value = const AppAsyncLoading();
     try {
-      _errorSignal.value = null;
-      await _indexManager.deleteEntry(_entry.value!.id);
+      await _indexManager.deleteEntry(current.id);
+      _deleteState.value = const AppAsyncSuccess(true);
       return true;
     } catch (e) {
       log('Error deleting entry: $e');
-      _errorSignal.value = 'Failed to delete entry: $e';
+      _deleteState.value = const AppAsyncFailure('Could not delete entry');
       return false;
     }
   }
@@ -209,30 +218,26 @@ class EntryManager {
     return null;
   }
 
-  /// Clear any error state
-  void clearError() {
-    _errorSignal.value = null;
-  }
-
   void _onTextChanged() {
-    if (_entry.value == null) return;
+    final current = entry;
+    if (current == null) return;
 
-    final originalInflections = _entry.value!.inflectionsList;
-    final originalPortugueseHeadwords = _entry.value!.portugueseHeadwordsList;
+    final originalInflections = current.inflectionsList;
+    final originalPortugueseHeadwords = current.portugueseHeadwordsList;
     final originalPortugueseDescription =
-        _entry.value!.portugueseTranslation?.description ?? '';
-    final originalEnglishHeadwords = _entry.value!.englishHeadwordsList;
+        current.portugueseTranslation?.description ?? '';
+    final originalEnglishHeadwords = current.englishHeadwordsList;
     final originalEnglishDescription =
-        _entry.value!.englishTranslation?.description ?? '';
+        current.englishTranslation?.description ?? '';
 
     _isDirty.value =
-        _definitionController.text != _entry.value!.definition ||
-        _exampleSentenceController.text != (_entry.value!.exampleSentence ?? '') ||
+        _definitionController.text != current.definition ||
+        _exampleSentenceController.text != (current.exampleSentence ?? '') ||
         _inflections.value != originalInflections ||
         _portugueseDescriptionController.text != originalPortugueseDescription ||
         _portugueseHeadwords.value != originalPortugueseHeadwords ||
         _englishDescriptionController.text != originalEnglishDescription ||
         _englishHeadwords.value != originalEnglishHeadwords ||
-        _selectedFlags.value.map((f) => f.number).toList() != _entry.value!.flags;
+        _selectedFlags.value.map((f) => f.number).toList() != current.flags;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
+import '../shared/models/async_state.dart';
 import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
 import '../shared/services/database_service.dart';
@@ -56,10 +57,12 @@ class IndexManager {
     gridEntries.value = getFilteredEntries();
   }
 
-  final _isBusy = signal<bool>(false);
-  bool get isBusy => _isBusy.value;
+  final _loadState = Signal<AppAsyncState<bool>>(const AppAsyncIdle());
+  AppAsyncState<bool> get loadState => _loadState.value;
   bool get shouldShowEmpty =>
-      !isBusy && searchController.text.isEmpty && gridEntries.value.isEmpty;
+      loadState is AppAsyncSuccess &&
+      searchController.text.isEmpty &&
+      gridEntries.value.isEmpty;
 
   bool get showAddCard {
     if (searchController.text.isEmpty) return false;
@@ -74,19 +77,21 @@ class IndexManager {
   }
 
   Future<void> loadEntries() async {
-    _isBusy.value = true;
+    // Keep showing entries we already have while refreshing
+    final hasEntries = _allEntries.isNotEmpty;
+    if (!hasEntries) _loadState.value = const AppAsyncLoading();
+
     try {
-      // final fresh = await Future.delayed(const Duration(seconds: 2), () => mockEntries);
       final fresh = await _db.getEntries();
-      _allEntries.clear();
-      _allEntries.addAll(fresh);
+      _allEntries
+        ..clear()
+        ..addAll(fresh);
       gridEntries.value = getFilteredEntries();
-    } catch (e) {
-      // Handle error - entries will remain empty
-      _allEntries.clear();
-      gridEntries.value = [];
-    } finally {
-      _isBusy.value = false;
+      _loadState.value = const AppAsyncSuccess(true);
+    } catch (_) {
+      if (!hasEntries) {
+        _loadState.value = const AppAsyncFailure('Could not load entries');
+      }
     }
   }
 

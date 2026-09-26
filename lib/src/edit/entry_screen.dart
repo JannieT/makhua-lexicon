@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../shared/extensions.dart';
+import '../shared/models/async_state.dart';
+import '../shared/models/entry.dart';
 import '../shared/models/flags.dart';
 import '../shared/services/service_locator.dart';
 import '../shared/widgets/environment_label.dart';
+import '../shared/widgets/error_banner.dart';
 import '../shared/widgets/flag_button.dart';
 import '../shared/widgets/not_found.dart';
 import 'entry_manager.dart';
@@ -26,151 +29,169 @@ class _EntryScreenState extends State<EntryScreen> {
   @override
   Widget build(BuildContext context) {
     return SignalBuilder(builder: (context) {
-      if (_manager.entry == null) {
-        if (_manager.error == null) return const SizedBox.shrink();
-
-        return NotFound(
+      return switch (_manager.entryState) {
+        AppAsyncSuccess(data: final entry?) => _buildEditor(entry),
+        AppAsyncSuccess() => NotFound(
           title: context.tr.entryNotFound,
           description: context.tr.entryNotFoundDescription,
-        );
-      }
-
-      final entry = _manager.entry!;
-      return Scaffold(
-        appBar: AppBar(
-          title: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(entry.headword, style: Theme.of(context).appBarTheme.titleTextStyle),
-              SizedBox(width: 8),
-              const EnvironmentLabel(),
-            ],
+        ),
+        AppAsyncFailure(:final message) => Scaffold(
+          appBar: AppBar(),
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ErrorBanner(message: message, onRetry: _initializeEntry),
           ),
-          actions: [
-            SignalBuilder(builder: (context) {
-              if (!_manager.isDirty) return const SizedBox.shrink();
-              return TextButton(onPressed: _onSave, child: Text(context.tr.save));
-            }),
-            IconButton(icon: const Icon(Icons.delete), onPressed: _onDelete),
+        ),
+        _ => const SizedBox.shrink(),
+      };
+    });
+  }
+
+  Widget _buildEditor(Entry entry) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(entry.headword, style: Theme.of(context).appBarTheme.titleTextStyle),
+            SizedBox(width: 8),
+            const EnvironmentLabel(),
           ],
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
+        actions: [
+          SignalBuilder(builder: (context) {
+            if (!_manager.isDirty) return const SizedBox.shrink();
+            final isSaving = _manager.saveState is AppAsyncLoading<bool>;
+            return TextButton(
+              onPressed: isSaving ? null : _onSave,
+              child: Text(context.tr.save),
+            );
+          }),
+          SignalBuilder(builder: (context) {
+            final isDeleting = _manager.deleteState is AppAsyncLoading<bool>;
+            return IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: isDeleting ? null : _onDelete,
+            );
+          }),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
 
-                    // Editable fields
-                    TextFormField(
-                      controller: _manager.definitionController,
-                      decoration: InputDecoration(
-                        labelText: context.tr.definition,
-                        border: const OutlineInputBorder(),
-                      ),
-                      maxLines: 4,
-                      validator: _manager.validateDefinition,
+                  // Editable fields
+                  TextFormField(
+                    controller: _manager.definitionController,
+                    decoration: InputDecoration(
+                      labelText: context.tr.definition,
+                      border: const OutlineInputBorder(),
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _manager.exampleSentenceController,
-                      decoration: InputDecoration(
-                        labelText: context.tr.exampleSentence,
-                        border: const OutlineInputBorder(),
-                      ),
-                      maxLines: 2,
+                    maxLines: 4,
+                    validator: _manager.validateDefinition,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _manager.exampleSentenceController,
+                    decoration: InputDecoration(
+                      labelText: context.tr.exampleSentence,
+                      border: const OutlineInputBorder(),
                     ),
-                    const SizedBox(height: 16),
-                    SignalBuilder(builder: (context) {
-                      return TagEditor(
-                        initialValue: _manager.inflections.join(','),
-                        label: context.tr.inflections,
-                        hint: context.tr.inflectionsHint,
-                        onChanged: _manager.updateInflections,
-                      );
-                    }),
-                    const SizedBox(height: 50),
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 16),
+                  SignalBuilder(builder: (context) {
+                    return TagEditor(
+                      initialValue: _manager.inflections.join(','),
+                      label: context.tr.inflections,
+                      hint: context.tr.inflectionsHint,
+                      onChanged: _manager.updateInflections,
+                    );
+                  }),
+                  const SizedBox(height: 50),
 
-                    // Portuguese Translation section
-                    Text(
-                      context.tr.portugueseTranslation,
-                      style: Theme.of(context).textTheme.titleMedium,
+                  // Portuguese Translation section
+                  Text(
+                    context.tr.portugueseTranslation,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _manager.portugueseDescriptionController,
+                    decoration: InputDecoration(
+                      labelText: context.tr.portugueseDescription,
+                      border: const OutlineInputBorder(),
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _manager.portugueseDescriptionController,
-                      decoration: InputDecoration(
-                        labelText: context.tr.portugueseDescription,
-                        border: const OutlineInputBorder(),
-                      ),
-                      maxLines: 3,
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 16),
+                  SignalBuilder(builder: (context) {
+                    return TagEditor(
+                      initialValue: _manager.portugueseHeadwords.join(','),
+                      label: context.tr.portugueseHeadwords,
+                      hint: context.tr.portugueseHeadwordsHint,
+                      onChanged: _manager.updatePortugueseHeadwords,
+                    );
+                  }),
+                  const SizedBox(height: 50),
+
+                  // English Translation section
+                  Text(
+                    context.tr.englishTranslation,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _manager.englishDescriptionController,
+                    decoration: InputDecoration(
+                      labelText: context.tr.englishDescription,
+                      border: const OutlineInputBorder(),
                     ),
-                    const SizedBox(height: 16),
-                    SignalBuilder(builder: (context) {
-                      return TagEditor(
-                        initialValue: _manager.portugueseHeadwords.join(','),
-                        label: context.tr.portugueseHeadwords,
-                        hint: context.tr.portugueseHeadwordsHint,
-                        onChanged: _manager.updatePortugueseHeadwords,
-                      );
-                    }),
-                    const SizedBox(height: 50),
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 16),
+                  SignalBuilder(builder: (context) {
+                    return TagEditor(
+                      initialValue: _manager.englishHeadwords.join(','),
+                      label: context.tr.englishHeadwords,
+                      hint: context.tr.englishHeadwordsHint,
+                      onChanged: _manager.updateEnglishHeadwords,
+                    );
+                  }),
+                  SizedBox(height: 50),
 
-                    // English Translation section
-                    Text(
-                      context.tr.englishTranslation,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _manager.englishDescriptionController,
-                      decoration: InputDecoration(
-                        labelText: context.tr.englishDescription,
-                        border: const OutlineInputBorder(),
-                      ),
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 16),
-                    SignalBuilder(builder: (context) {
-                      return TagEditor(
-                        initialValue: _manager.englishHeadwords.join(','),
-                        label: context.tr.englishHeadwords,
-                        hint: context.tr.englishHeadwordsHint,
-                        onChanged: _manager.updateEnglishHeadwords,
-                      );
-                    }),
-                    SizedBox(height: 50),
+                  // Flags section
+                  Text(
+                    context.tr.flags,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  ...Flag.values.map(_buildFlagButton),
 
-                    // Flags section
-                    Text(
-                      context.tr.flags,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    ...Flag.values.map(_buildFlagButton),
+                  const SizedBox(height: 32),
 
-                    const SizedBox(height: 32),
+                  // Metadata section
+                  SignalBuilder(builder: (context) {
+                    return EntryMetadata(entry: _manager.entry!);
+                  }),
 
-                    // Metadata section
-                    SignalBuilder(builder: (context) {
-                      return EntryMetadata(entry: _manager.entry!);
-                    }),
-
-                    // generous bottom spacing
-                    const SizedBox(height: 100),
-                  ],
-                ),
+                  // generous bottom spacing
+                  const SizedBox(height: 100),
+                ],
               ),
             ),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 
   Widget _buildFlagButton(Flag flag) {

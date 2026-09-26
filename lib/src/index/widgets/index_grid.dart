@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../shared/extensions.dart';
+import '../../shared/models/async_state.dart';
 import '../../shared/models/entry.dart';
 import '../../shared/services/service_locator.dart';
+import '../../shared/widgets/error_banner.dart';
 import '../index_manager.dart';
 import 'index_card.dart';
 import 'index_tile.dart';
@@ -31,31 +33,50 @@ class _IndexGridState extends State<IndexGrid> {
   Widget build(BuildContext context) {
     final manager = get<IndexManager>();
 
-    return SignalBuilder(builder: (context) {
-      final entries = manager.gridEntries.value;
-      if (manager.shouldShowEmpty) {
-        return const EmptyWidget();
-      }
-
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          final width = constraints.maxWidth;
-          if (width < _listBreakpoint) {
-            return _buildList(manager, entries);
-          }
-          return _buildGrid(manager, entries, width);
-        },
-      );
-    });
+    return SignalBuilder(
+      builder: (context) => switch (manager.loadState) {
+        AppAsyncFailure(:final message) => Align(
+          alignment: Alignment.topCenter,
+          child: ErrorBanner(message: message, onRetry: manager.loadEntries),
+        ),
+        AppAsyncSuccess() when manager.shouldShowEmpty => const EmptyWidget(),
+        final state => _buildEntries(
+          manager,
+          manager.gridEntries.value,
+          isLoading: state is! AppAsyncSuccess,
+        ),
+      },
+    );
   }
 
-  Widget _buildGrid(IndexManager manager, List<Entry> entries, double width) {
+  Widget _buildEntries(
+    IndexManager manager,
+    List<Entry> entries, {
+    required bool isLoading,
+  }) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        if (width < _listBreakpoint) {
+          return _buildList(manager, entries, isLoading);
+        }
+        return _buildGrid(manager, entries, width, isLoading);
+      },
+    );
+  }
+
+  Widget _buildGrid(
+    IndexManager manager,
+    List<Entry> entries,
+    double width,
+    bool isLoading,
+  ) {
     final crossAxisCount = switch (width) {
       < 900 => 3,
       < 1200 => 4,
       _ => 4,
     };
-    final cards = _cardList(manager, entries);
+    final cards = _cardList(manager, entries, isLoading);
 
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -69,8 +90,8 @@ class _IndexGridState extends State<IndexGrid> {
     );
   }
 
-  Widget _buildList(IndexManager manager, List<Entry> entries) {
-    final tiles = _tileList(manager, entries);
+  Widget _buildList(IndexManager manager, List<Entry> entries, bool isLoading) {
+    final tiles = _tileList(manager, entries, isLoading);
 
     return ListView.separated(
       itemCount: tiles.length,
@@ -79,8 +100,8 @@ class _IndexGridState extends State<IndexGrid> {
     );
   }
 
-  List<Widget> _cardList(IndexManager manager, List<Entry> entries) {
-    if (manager.isBusy) {
+  List<Widget> _cardList(IndexManager manager, List<Entry> entries, bool isLoading) {
+    if (isLoading) {
       return List.generate(4, (index) => const LoadingCard());
     }
 
@@ -92,8 +113,8 @@ class _IndexGridState extends State<IndexGrid> {
     return [...found, ...add];
   }
 
-  List<Widget> _tileList(IndexManager manager, List<Entry> entries) {
-    if (manager.isBusy) {
+  List<Widget> _tileList(IndexManager manager, List<Entry> entries, bool isLoading) {
+    if (isLoading) {
       return List.generate(6, (index) => const LoadingTile());
     }
 
