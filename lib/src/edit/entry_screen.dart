@@ -25,7 +25,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
+    return SignalBuilder(builder: (context) {
       if (_manager.entry == null) {
         if (_manager.error == null) return const SizedBox.shrink();
 
@@ -47,7 +47,7 @@ class _EntryScreenState extends State<EntryScreen> {
             ],
           ),
           actions: [
-            Watch((_) {
+            SignalBuilder(builder: (context) {
               if (!_manager.isDirty) return const SizedBox.shrink();
               return TextButton(onPressed: _onSave, child: Text(context.tr.save));
             }),
@@ -86,7 +86,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       maxLines: 2,
                     ),
                     const SizedBox(height: 16),
-                    Watch((_) {
+                    SignalBuilder(builder: (context) {
                       return TagEditor(
                         initialValue: _manager.inflections.join(','),
                         label: context.tr.inflections,
@@ -111,7 +111,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       maxLines: 3,
                     ),
                     const SizedBox(height: 16),
-                    Watch((_) {
+                    SignalBuilder(builder: (context) {
                       return TagEditor(
                         initialValue: _manager.portugueseHeadwords.join(','),
                         label: context.tr.portugueseHeadwords,
@@ -136,7 +136,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       maxLines: 3,
                     ),
                     const SizedBox(height: 16),
-                    Watch((_) {
+                    SignalBuilder(builder: (context) {
                       return TagEditor(
                         initialValue: _manager.englishHeadwords.join(','),
                         label: context.tr.englishHeadwords,
@@ -157,7 +157,7 @@ class _EntryScreenState extends State<EntryScreen> {
                     const SizedBox(height: 32),
 
                     // Metadata section
-                    Watch((_) {
+                    SignalBuilder(builder: (context) {
                       return EntryMetadata(entry: _manager.entry!);
                     }),
 
@@ -174,7 +174,7 @@ class _EntryScreenState extends State<EntryScreen> {
   }
 
   Widget _buildFlagButton(Flag flag) {
-    return Watch((_) {
+    return SignalBuilder(builder: (context) {
       final isSelected = _manager.isFlagSelected(flag);
       return Padding(
         padding: const EdgeInsets.only(bottom: 8),

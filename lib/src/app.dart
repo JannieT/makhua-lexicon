@@ -16,7 +16,7 @@ class LexiconApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = MaterialTheme(context);
 
-    return Watch((_) {
+    return SignalBuilder(builder: (context) {
       final settings = get<SettingsManager>();
       final themeMode = settings.themeMode;
       final language = settings.language;

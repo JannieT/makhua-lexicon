@@ -31,7 +31,7 @@ class _IndexGridState extends State<IndexGrid> {
   Widget build(BuildContext context) {
     final manager = get<IndexManager>();
 
-    return Watch((_) {
+    return SignalBuilder(builder: (context) {
       final entries = manager.gridEntries.value;
       if (manager.shouldShowEmpty) {
         return const EmptyWidget();

@@ -36,6 +36,9 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "**/*.mocks.dart"
+    - build/**
+    - android/**
+    - web/**
 
 formatter:
   page_width: 90

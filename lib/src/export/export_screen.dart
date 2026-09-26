@@ -27,7 +27,7 @@ class ExportScreen extends StatelessWidget {
       appBar: AppBar(title: Text(context.tr.exportEntries)),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Watch((_) {
+        child: SignalBuilder(builder: (context) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -23,7 +23,7 @@ class SettingsView extends StatelessWidget {
             // Theme Selection
             Text(context.tr.systemTheme, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
-            Watch((_) {
+            SignalBuilder(builder: (context) {
               final themeMode = get<SettingsManager>().themeMode;
 
               return DropdownButton<ThemeMode>(
@@ -49,7 +49,7 @@ class SettingsView extends StatelessWidget {
             // Language Selection
             Text(context.tr.language, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
-            Watch((_) {
+            SignalBuilder(builder: (context) {
               final currentLanguage = get<SettingsManager>().language;
 
               return DropdownButton<String>(

@@ -14,7 +14,7 @@ class FilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final manager = get<IndexManager>();
 
-    return Watch((_) {
+    return SignalBuilder(builder: (context) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
