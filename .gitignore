@@ -48,3 +48,4 @@ app.*.map.json
 lib/src/localization/app_localizations*.dart
 .firebase/
 lib/firebase_options.dart
+.vscode/settings.json
