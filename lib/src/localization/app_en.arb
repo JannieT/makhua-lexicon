@@ -298,5 +298,13 @@
   "portuguese": "Portuguese",
   "@portuguese": {
     "description": "Label for Portuguese language option"
+  },
+  "navIndex": "Index",
+  "@navIndex": {
+    "description": "App bar navigation label for the index screen"
+  },
+  "navList": "List",
+  "@navList": {
+    "description": "App bar navigation label for the list screen"
   }
 }
