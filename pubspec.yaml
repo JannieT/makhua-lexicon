@@ -1,13 +1,11 @@
 name: makhua_lexicon
 description: "Makhua Shirima Lexicon"
-publish_to: 'none' 
+publish_to: "none"
 
-
-version: 3.1.0+2
+version: 4.0.0+2
 
 environment:
-  sdk: '>=3.8.0 <4.0.0'
-
+  sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
   flutter_localizations:
@@ -36,7 +34,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   dart_style: ^3.1.0
@@ -46,7 +43,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
