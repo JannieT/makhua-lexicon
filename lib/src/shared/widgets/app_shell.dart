@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../export/export_screen.dart';
 import '../../settings/settings_screen.dart';
 import '../../users/auth_manager.dart';
 import '../extensions.dart';
@@ -43,14 +41,6 @@ class AppShell extends StatelessWidget {
             branch: 1,
             navigationShell: navigationShell,
           ),
-          // Only show export button on web platform
-          if (kIsWeb && context.isLargeWidth)
-            IconButton(
-              icon: const Icon(Icons.download),
-              onPressed: () {
-                context.push(ExportScreen.routeName);
-              },
-            ),
           _UserMenuButton(),
         ],
       ),

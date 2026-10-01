@@ -259,18 +259,6 @@
       }
     }
   },
-  "export": "Export",
-  "@export": {
-    "description": "Label for the export button"
-  },
-  "exportEntries": "Export Entries",
-  "@exportEntries": {
-    "description": "Title for the export screen"
-  },
-  "exportDescription": "Download all entries in CSV format",
-  "@exportDescription": {
-    "description": "Description text for the export screen"
-  },
   "downloadCsv": "Download CSV",
   "@downloadCsv": {
     "description": "Label for the download CSV button"
