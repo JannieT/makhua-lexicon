@@ -294,5 +294,9 @@
   "navList": "List",
   "@navList": {
     "description": "App bar navigation label for the list screen"
+  },
+  "all": "All",
+  "@all": {
+    "description": "Filter chip that shows headwords for all letters"
   }
 }

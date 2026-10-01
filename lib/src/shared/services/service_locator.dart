@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import '../../edit/entry_manager.dart';
 import '../../export/export_manager.dart';
 import '../../index/index_manager.dart';
+import '../../list/list_manager.dart';
 import '../../settings/settings_manager.dart';
 import '../../settings/settings_service.dart';
 import '../../users/auth_manager.dart';
@@ -28,6 +29,7 @@ Future<void> registerServices() async {
       manager.dispose();
     },
   );
+  get.registerSingleton<ListManager>(ListManager(get<DatabaseService>()));
   get.registerFactory<ExportManager>(() => ExportManager(get<DatabaseService>()));
   get.registerFactory<EntryManager>(
     () => EntryManager(get<AuthService>(), get<IndexManager>()),
