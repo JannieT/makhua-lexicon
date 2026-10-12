@@ -2,7 +2,7 @@ name: makhua_lexicon
 description: "Makhua Shirima Lexicon"
 publish_to: "none"
 
-version: 4.0.0+2
+version: 4.1.0+3
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
