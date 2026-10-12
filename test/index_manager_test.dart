@@ -45,4 +45,27 @@ void main() {
     expect(manager.loadState, isA<AppAsyncSuccess<bool>>());
     expect(manager.gridEntries.value, hasLength(1));
   });
+
+  test('selecting a flag option shows only entries with that flag', () async {
+    db.stored = [fakeEntry('nyuwo')];
+    await manager.loadEntries();
+
+    manager.selectFilter(IndexFilter.needsReviewOne);
+    expect(manager.gridEntries.value, isEmpty);
+
+    manager.selectFilter(IndexFilter.isDraft);
+    expect(manager.selectedFilterOption, IndexFilter.isDraft);
+    expect(manager.gridEntries.value, hasLength(1));
+  });
+
+  test('searching clears the selected filter option', () async {
+    db.stored = [fakeEntry('nyuwo')];
+    await manager.loadEntries();
+    manager.selectFilter(IndexFilter.isDraft);
+
+    manager.searchController.text = 'nyu';
+    manager.onSearch('nyu');
+
+    expect(manager.selectedFilterOption, isNull);
+  });
 }

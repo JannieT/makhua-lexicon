@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../localization/app_localizations.dart';
+import 'models/flags.dart';
 
 const designHeight = 812;
 
@@ -9,6 +10,11 @@ extension ExtendBuildContext on BuildContext {
   AppLocalizations get tr => AppLocalizations.of(this)!;
   TextTheme get styles => Theme.of(this).textTheme;
   ColorScheme get colors => Theme.of(this).colorScheme;
+  String flagLabel(Flag flag) => switch (flag) {
+    Flag.isDraft => tr.isDraft,
+    Flag.needsReviewOne => tr.needsReviewOne,
+    Flag.needsReviewTwo => tr.needsReviewTwo,
+  };
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
 
   Size get size => MediaQuery.of(this).size;

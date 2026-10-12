@@ -20,6 +20,13 @@ enum IndexFilter {
     needsReviewTwo => 3,
     _ => 0,
   };
+
+  Flag? get flag => switch (this) {
+    isDraft => Flag.isDraft,
+    needsReviewOne => Flag.needsReviewOne,
+    needsReviewTwo => Flag.needsReviewTwo,
+    _ => null,
+  };
 }
 
 class IndexManager {
@@ -42,13 +49,19 @@ class IndexManager {
     gridEntries.value = getFilteredEntries();
   }
 
-  void setFilterFlag(Flag flag) {
-    final newFilter = switch (flag) {
-      Flag.isDraft => IndexFilter.isDraft,
-      Flag.needsReviewOne => IndexFilter.needsReviewOne,
-      Flag.needsReviewTwo => IndexFilter.needsReviewTwo,
-    };
-    filter = newFilter;
+  /// Filters the user can pick from the dropdown; search is set by typing.
+  List<IndexFilter> get filterOptions => const [
+    IndexFilter.latest,
+    IndexFilter.isDraft,
+    IndexFilter.needsReviewOne,
+    IndexFilter.needsReviewTwo,
+  ];
+
+  /// The dropdown's value, or null while a search is active.
+  IndexFilter? get selectedFilterOption => filter == IndexFilter.search ? null : filter;
+
+  void selectFilter(IndexFilter? value) {
+    if (value != null) filter = value;
   }
 
   final searchController = TextEditingController();

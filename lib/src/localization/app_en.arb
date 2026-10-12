@@ -16,6 +16,10 @@
   "@searchEntries": {
     "description": "Placeholder text for the search field in the filter bar"
   },
+  "filter": "Filter",
+  "@filter": {
+    "description": "Hint for the filter dropdown when a search is active"
+  },
   "latest": "Latest",
   "@latest": {
     "description": "Label for the latest entries filter chip"
@@ -162,11 +166,11 @@
   "@isDraft": {
     "description": "Label for the draft flag"
   },
-  "needsReviewOne": "Needs Review 1",
+  "needsReviewOne": "Geraldo, please check",
   "@needsReviewOne": {
     "description": "Label for the first review flag"
   },
-  "needsReviewTwo": "Needs Review 2",
+  "needsReviewTwo": "Domingos, please check",
   "@needsReviewTwo": {
     "description": "Label for the second review flag"
   },

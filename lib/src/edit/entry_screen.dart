@@ -207,7 +207,7 @@ class _EntryScreenState extends State<EntryScreen> {
               onTap: (flag) => _manager.toggleFlag(flag),
             ),
             const SizedBox(width: 8),
-            Text(flag.label),
+            Text(context.flagLabel(flag)),
           ],
         ),
       );
